@@ -46,14 +46,15 @@ function Dashboard() {
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
+                href="/tasks?status=completed"
                 color="dark"
-                icon="weekend"
-                title="Bookings"
-                count={281}
+                icon="list_alt"
+                title="Active Tasks"
+                count={17}
                 percentage={{
                   color: "success",
-                  amount: "+55%",
-                  label: "than lask week",
+                  amount: "8",
+                  label: "Completed today",
                 }}
               />
             </MDBox>
@@ -61,13 +62,14 @@ function Dashboard() {
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
-                icon="leaderboard"
-                title="Today's Users"
-                count="2,300"
+                href="/tasks?status=closed"
+                icon="task"
+                title="Closed Tasks"
+                count="563"
                 percentage={{
                   color: "success",
-                  amount: "+3%",
-                  label: "than last month",
+                  amount: "482",
+                  label: "Closed with successfully",
                 }}
               />
             </MDBox>
@@ -75,14 +77,15 @@ function Dashboard() {
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
+                href="/projects"
                 color="success"
-                icon="store"
-                title="Revenue"
-                count="34k"
+                icon="account_tree"
+                title="Projects"
+                count="21"
                 percentage={{
                   color: "success",
-                  amount: "+1%",
-                  label: "than yesterday",
+                  amount: "19",
+                  label: "Active projects",
                 }}
               />
             </MDBox>
@@ -90,14 +93,15 @@ function Dashboard() {
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
+                href="/templates"
                 color="primary"
-                icon="person_add"
-                title="Followers"
-                count="+91"
+                icon="widgets"
+                title="Templates"
+                count="142"
                 percentage={{
                   color: "success",
-                  amount: "",
-                  label: "Just updated",
+                  amount: "90",
+                  label: "Active Templates",
                 }}
               />
             </MDBox>
@@ -109,9 +113,9 @@ function Dashboard() {
               <MDBox mb={3}>
                 <ReportsBarChart
                   color="info"
-                  title="website views"
-                  description="Last Campaign Performance"
-                  date="campaign sent 2 days ago"
+                  title="Weekly Signature Counts"
+                  description="Last 7 days activities are included"
+                  date="Data calculated 1 day ago"
                   chart={reportsBarChartData}
                 />
               </MDBox>
@@ -120,13 +124,13 @@ function Dashboard() {
               <MDBox mb={3}>
                 <ReportsLineChart
                   color="success"
-                  title="daily sales"
+                  title="Daily Signature Activities"
                   description={
                     <>
-                      (<strong>+15%</strong>) increase in today sales.
+                      (<strong>+15%</strong>) increase in today signature activities.
                     </>
                   }
-                  date="updated 4 min ago"
+                  date="updated 5 min ago"
                   chart={sales}
                 />
               </MDBox>
@@ -136,7 +140,7 @@ function Dashboard() {
                 <ReportsLineChart
                   color="dark"
                   title="completed tasks"
-                  description="Last Campaign Performance"
+                  description="This User Performance"
                   date="just updated"
                   chart={tasks}
                 />
@@ -146,11 +150,8 @@ function Dashboard() {
         </MDBox>
         <MDBox>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={8}>
+            <Grid item xs={12} md={12} lg={12}>
               <Projects />
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <OrdersOverview />
             </Grid>
           </Grid>
         </MDBox>

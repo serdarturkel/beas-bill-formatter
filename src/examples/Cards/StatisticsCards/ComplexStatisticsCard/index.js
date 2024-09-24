@@ -24,10 +24,15 @@ import Icon from "@mui/material/Icon";
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
+import { Navigate, useNavigate } from "react-router-dom";
 
-function ComplexStatisticsCard({ color, title, count, percentage, icon }) {
+function ComplexStatisticsCard({ color, title, count, percentage, icon, href }) {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate(href);
+  };
   return (
-    <Card>
+    <Card onClick={handleClick} style={{ cursor: "pointer" }}>
       <MDBox display="flex" justifyContent="space-between" pt={1} px={2}>
         <MDBox
           variant="gradient"
@@ -79,6 +84,7 @@ ComplexStatisticsCard.defaultProps = {
     text: "",
     label: "",
   },
+  href: "/dashboard",
 };
 
 // Typechecking props for the ComplexStatisticsCard
@@ -110,6 +116,7 @@ ComplexStatisticsCard.propTypes = {
     label: PropTypes.string,
   }),
   icon: PropTypes.node.isRequired,
+  href: PropTypes.any,
 };
 
 export default ComplexStatisticsCard;
