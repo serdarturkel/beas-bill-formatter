@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 
 // react-router components
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
@@ -40,7 +40,6 @@ import themeDarkRTL from "assets/theme-dark/theme-rtl";
 
 // RTL plugins
 import { CacheProvider } from "@emotion/react";
-import createCache from "@emotion/cache";
 
 // Material Dashboard 2 React routes
 import routes from "routes";
@@ -51,6 +50,7 @@ import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "co
 // Images
 import brandWhite from "assets/images/beaslogo-landscape-white-no-bottom.webp"; //logo-ct.png";
 import brandDark from "assets/images/beaslogo-landscape-black-no-bottom.webp"; //logo-ct-dark.png";
+import { ConfirmProvider } from "material-ui-confirm";
 
 export default function App() {
   const brandName = "Bill Formatter";
@@ -66,7 +66,7 @@ export default function App() {
     darkMode,
   } = controller;
   const [onMouseEnter, setOnMouseEnter] = useState(false);
-  const [rtlCache, setRtlCache] = useState(null);
+  const [rtlCache] = useState(null);
   const { pathname } = useLocation();
 
   // Open sidenav when mouse enter on mini sidenav
@@ -155,10 +155,12 @@ export default function App() {
           </>
         )}
         {layout === "vr" && <Configurator />}
-        <Routes>
-          {getRoutes(routes)}
-          <Route path="*" element={<Navigate to="/dashboard" />} />
-        </Routes>
+        <ConfirmProvider>
+          <Routes>
+            {getRoutes(routes)}
+            <Route path="*" element={<Navigate to="/dashboard" />} />
+          </Routes>
+        </ConfirmProvider>
       </ThemeProvider>
     </CacheProvider>
   ) : (
@@ -179,10 +181,12 @@ export default function App() {
         </>
       )}
       {layout === "vr" && <Configurator />}
-      <Routes>
-        {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/dashboard" />} />
-      </Routes>
+      <ConfirmProvider>
+        <Routes>
+          {getRoutes(routes)}
+          <Route path="*" element={<Navigate to="/dashboard" />} />
+        </Routes>
+      </ConfirmProvider>
     </ThemeProvider>
   );
 }
