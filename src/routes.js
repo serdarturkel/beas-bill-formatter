@@ -49,7 +49,7 @@ import Icon from "@mui/material/Icon";
 import Tasks from "layouts/tasks/Tasks";
 import Templates from "layouts/templates/Templates";
 import Certificates from "layouts/certificates/Certificates";
-import Projects from "layouts/projects/Projects";
+import Projects from "layouts/projects";
 import Settings from "layouts/settings/Settings";
 
 const routes = [

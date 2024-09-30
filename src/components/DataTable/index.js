@@ -1,26 +1,15 @@
-import { Card, Icon, IconButton, Menu, MenuItem } from '@mui/material';
+import { Card, Icon, IconButton, Menu, MenuItem, TextField } from '@mui/material';
 import MDBox from 'components/MDBox';
 import MDInput from 'components/MDInput';
 import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { getData as getProjectData } from 'api/api';
+import MDTypography from 'components/MDTypography';
 const DataTableWithPagination = ({ cols, handleEdit, handleDelete, fetchUrl }) => {
     const [data, setData] = useState([]);        // Tüm veri
     const [currentPage, setCurrentPage] = useState(1); // Şu anki sayfa
     const [itemsPerPage] = useState(10);         // Sayfa başına gösterilecek veri
     const [loading, setLoading] = useState(true); // Yüklenme durumu
-
-
-    const [menu, setMenu] = useState(null);
-    const openMenu = ({ currentTarget }) => setMenu(currentTarget);
-
-    const fetchAndCloseMenu = () => {
-        fetchData();
-        closeMenu();
-    };
-    const closeMenu = () => {
-        setMenu(null);
-    };
 
     const deleteAction = async (item) => {
         await handleDelete(item);
@@ -29,29 +18,11 @@ const DataTableWithPagination = ({ cols, handleEdit, handleDelete, fetchUrl }) =
 
     const fetchData = async () => {
         setLoading(true);
-        const result =await getProjectData(fetchUrl + '?page=' + (currentPage - 1) + '&size=' + itemsPerPage + '&sort=name');
+        const result = await getProjectData(fetchUrl + '?page=' + (currentPage - 1) + '&size=' + itemsPerPage + '&sort=createdDate'
+            + (searchValue && '&search=name=like=' + searchValue + ',description=like=' + searchValue));
         setData(result);
         setLoading(false);
     };
-
-    const renderMenu = (
-        <Menu
-            id="simple-menu"
-            anchorEl={menu}
-            anchorOrigin={{
-                vertical: "top",
-                horizontal: "left",
-            }}
-            transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-            }}
-            open={Boolean(menu)}
-            onClose={closeMenu}
-        >
-            <MenuItem onClick={fetchAndCloseMenu}>Refresh Data</MenuItem>
-        </Menu>
-    );
 
     // Backend'den veri çekme
     useEffect(() => {
@@ -86,20 +57,46 @@ const DataTableWithPagination = ({ cols, handleEdit, handleDelete, fetchUrl }) =
         },
         ...cols,
     ];
+    const [searchValue, setSearchValue] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const allowedPattern = /^[A-Za-z0-9*]*$/;
+    const handleInputChange = (e) => {
+        const value = e.target.value;
+
+        // Eğer girilen veri regex'e uyuyorsa state'e set et
+        if (allowedPattern.test(value)) {
+            setSearchValue(value);
+            setErrorMessage('');
+        } else {
+            // Uygun olmayan giriş olduğunda hata mesajı göster
+            setErrorMessage('Only characters A-Z, a-z, 0-9, and * are allowed.');
+        }
+    };
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            fetchData();
+        }
+    };
 
     return (
         <Card>
-            <MDBox display="flex" justifyContent="right" alignItems="center" p={4}>
+            <MDBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
                 <MDBox>
-                    <MDInput label="Search here" />
+                    <TextField
+                        label="Search here"
+                        value={searchValue}
+                        onChange={(e) => handleInputChange(e)}
+                        onKeyDown={handleKeyDown} // Enter tuşunu burada kontrol ediyoruz
+                        variant='outlined'
+                        error={!!errorMessage} // Eğer hata varsa kırmızı çerçeve göster
+                        helperText={errorMessage} // Hata mesajını göster
+                    />
                 </MDBox>
-                <MDBox>
-                    <Icon sx={{ cursor: "pointer", fontWeight: "bold" }} fontSize="small" onClick={openMenu}>
-                        more_vert
+                <MDBox color="text" px={2}>
+                    <Icon sx={{ cursor: "pointer", fontWeight: "bold" }} fontSize="small" onClick={fetchData}>
+                        refresh
                     </Icon>
                 </MDBox>
-
-                {renderMenu}
             </MDBox>
             <MDBox>
                 <DataTable

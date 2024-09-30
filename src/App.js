@@ -51,6 +51,8 @@ import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "co
 import brandWhite from "assets/images/beaslogo-landscape-white-no-bottom.webp"; //logo-ct.png";
 import brandDark from "assets/images/beaslogo-landscape-black-no-bottom.webp"; //logo-ct-dark.png";
 import { ConfirmProvider } from "material-ui-confirm";
+import { setGlobalErrorHandler } from "api/api";
+import ErrorModal from "components/Error";
 
 export default function App() {
   const brandName = "Bill Formatter";
@@ -68,6 +70,23 @@ export default function App() {
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const [rtlCache] = useState(null);
   const { pathname } = useLocation();
+
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    // Interceptor'dan gelen hata mesajını yönetmek için global error handler set edilir
+    setGlobalErrorHandler((message) => {
+      setErrorMessage(message);
+      setModalOpen(true);
+    });
+  }, []);
+
+  // Modal'ı kapatma fonksiyonu
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setErrorMessage('');
+  };
 
   // Open sidenav when mouse enter on mini sidenav
   const handleOnMouseEnter = () => {
@@ -136,35 +155,14 @@ export default function App() {
     </MDBox>
   );
 
-  return direction === "rtl" ? (
-    <CacheProvider value={rtlCache}>
-      <ThemeProvider theme={darkMode ? themeDarkRTL : themeRTL}>
-        <CssBaseline />
-        {layout === "dashboard" && (
-          <>
-            <Sidenav
-              color={sidenavColor}
-              brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-              brandName={brandName}
-              routes={routes}
-              onMouseEnter={handleOnMouseEnter}
-              onMouseLeave={handleOnMouseLeave}
-            />
-            <Configurator />
-            {configsButton}
-          </>
-        )}
-        {layout === "vr" && <Configurator />}
-        <ConfirmProvider>
-          <Routes>
-            {getRoutes(routes)}
-            <Route path="*" element={<Navigate to="/dashboard" />} />
-          </Routes>
-        </ConfirmProvider>
-      </ThemeProvider>
-    </CacheProvider>
-  ) : (
+  return (
+
     <ThemeProvider theme={darkMode ? themeDark : theme}>
+      <ErrorModal
+        open={isModalOpen}
+        handleClose={handleCloseModal}
+        message={errorMessage}
+      />
       <CssBaseline />
       {layout === "dashboard" && (
         <>

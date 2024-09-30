@@ -3,7 +3,7 @@ import { Grid } from "@mui/material";
 import MDBox from "components/MDBox";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import ProjectsPage from "layouts/projects/Projects/index";
+import ProjectsPage from "layouts/projects/ui";
 const Projects = () => {
   return (
     <DashboardLayout>
