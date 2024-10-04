@@ -13,11 +13,17 @@
     "url": "git+https://github.com/creativetimofficial/material-dashboard-react.git"
   },
   "dependencies": {
+    "@editorjs/editorjs": "^2.30.6",
+    "@editorjs/header": "^2.8.7",
+    "@editorjs/image": "^2.9.3",
+    "@editorjs/list": "^1.10.0",
+    "@editorjs/paragraph": "^2.11.6",
     "@emotion/cache": "11.10.8",
     "@emotion/react": "11.10.8",
     "@emotion/styled": "11.10.8",
     "@mui/icons-material": "5.11.16",
     "@mui/material": "5.12.3",
+    "@react-pdf/renderer": "^4.0.0",
     "axios": "^1.7.7",
     "chart.js": "4.3.0",
     "chroma-js": "2.4.2",

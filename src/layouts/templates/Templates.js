@@ -1,19 +1,17 @@
-import React from "react";
-import { Grid } from "@mui/material";
+import React, { useRef, useState } from "react";
 import MDBox from "components/MDBox";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import A4Page from "./A4Page";
+
+
 
 const Templates = () => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDBox mt={6} mb={3}>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} lg={12}>
-            Templates
-          </Grid>
-        </Grid>
+      <MDBox style={{ display: 'inline-block', width: '300mm', height: '100vh' }}>
+        <A4Page />
       </MDBox>
     </DashboardLayout>
   );
