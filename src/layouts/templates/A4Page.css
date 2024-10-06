@@ -4,20 +4,25 @@
     font-size: 12pt;
     box-shadow: 4px 4px 4px 2px rgba(95, 95, 130, 0.454);
     border-radius: 4px;
+    min-width: 210mm;
+    min-height: 297mm;
+    position: relative;
 }
 
 .page-content {
-    margin: 15mm;
+    width: calc(100% - 10mm);
+    height: calc(100% - 10mm);
+    margin: 5mm;
+    position: relative;
     display: inline-block;
-    width: 100vh;
-    height: 100vh;
+    border: dashed 0.5px #cccccc;
 }
 
 .page[page-size="A4"][layout="portrait"] {
-    position: relative !important;
-    margin: 0 25% 0 25% !important;
-    width: 210mm !important;
-    height: 297mm !important;
+    position: relative;
+    margin: 0 25% 0 25%;
+    width: 210mm;
+    height: 297mm;
 }
 
 .page[page-size="A4"][layout="landscape"] {
@@ -35,14 +40,26 @@
     height: 148mm;
 }
 
+.moveIcon {
+    cursor: move;
+}
+
 @media print {
     .doNotPrint {
         display: none !important;
         visibility: hidden !important;
     }
 
+    .ce-toolbar {
+        display: none;
+    }
+
     @page {
         size: A4;
+    }
+
+    .page-content {
+        border: none;
     }
 
     .page[page-size="A4"] {
@@ -57,4 +74,25 @@
         width: 100%;
         height: 50%;
     }
+}
+
+.content-box {
+    border: solid 1px red;
+    flex: 1;
+    height: 100%;
+    width: 100%;
+}
+
+.react-draggable {
+    border-left: dashed 1px darkgrey;
+    border-right: dashed 1px darkgrey;
+    margin:0px;
+    padding:0px;
+    background-color: #eeeeee55;;
+}
+.tc-table{
+    border: solid 1.5px #000000;
+}
+.tc-row{
+    border: solid 0.25px #000000;
 }

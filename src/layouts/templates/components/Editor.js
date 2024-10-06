@@ -4,16 +4,25 @@ import Header from '@editorjs/header';
 import Paragraph from '@editorjs/paragraph';
 import List from '@editorjs/list';
 import Image from '@editorjs/image';
-import { Box } from '@mui/material';
-import { PDFViewer, StyleSheet } from '@react-pdf/renderer';
-import PageA4 from './PageA4';
-
+import Styles from './Editor.css';
+import Quote from '@editorjs/quote';
+import NestedList from '@editorjs/nested-list';
+import { Checklist, Warning } from '@mui/icons-material';
+import Embed from '@editorjs/embed';
+import Delimiter from '@editorjs/delimiter';
+import CodeTool from '@editorjs/code';
+import { AttachesTool } from '@editorjs/attaches';
+import InlineCode from '@editorjs/inline-code';
+import simpleImage from '@editorjs/simple-image';
+import Marker from '@editorjs/marker';
+import LinkTool from '@editorjs/link';
+import Table from '@editorjs/table'
+import simpleImageUmd from '@editorjs/simple-image';
 
 
 const Editor = () => {
 
     const editorInstance = useRef(null);
-    const pageA4 = useRef(null);
 
 
     const editorContentToHtml = (blocks) => {
@@ -32,19 +41,6 @@ const Editor = () => {
         }).join('');
     };
 
-    const styles = StyleSheet.create({
-        page: {
-            flexDirection: 'row',
-            backgroundColor: '#E4E4E4'
-        },
-        section: {
-            margin: 10,
-            padding: 10,
-            flexGrow: 1
-        }
-    });
-
-
     useEffect(() => {
         // İlk olarak, 'editorjs' id'sine sahip elementin DOM'da var olup olmadığını kontrol et
         const editorHolder = document.getElementById('editorjs');
@@ -53,21 +49,21 @@ const Editor = () => {
             // Eğer element DOM'da varsa, EditorJS'i başlat
             editorInstance.current = new EditorJS({
                 holder: 'editorjs',
-                autofocus: true,
                 tools: {
                     header: {
                         class: Header,
                         inlineToolbar: true,
                         data: {
-                            text: "Key features",
+                            text: "Header",
                             level: 1,
                         },
                     },
                     paragraph: {
                         class: Paragraph,
                         inlineToolbar: true, // Gerekirse düzenlemeler yap
+                        
                         data: {
-                            text: "Hey. Meet the new Editor. On this picture you can see it in action. Then, try a demo 🤓",
+                            text: "Pharagraph",
                         }
                     },
                     list: {
@@ -84,14 +80,46 @@ const Editor = () => {
                             }
                         }
                     },
-                    // Diğer araçlar eklenebilir
+                    nestedList: {
+                        class: NestedList,
+                        inlineToolbar: true,
+                        config: {
+                            defaultStyle: 'unordered'
+                        },
+                    },
+                    linkTool: {
+                        class: LinkTool,
+                        inlineToolbar: true,
+                        config: {
+                            endpoint: 'http://localhost:8008/fetchUrl', // Your backend endpoint for url data fetching,
+                        }
+                    },
+                    table: {
+                        class: Table,
+                        inlineToolbar: true,
+                        config: {
+                            rows: 2,
+                            cols: 3,
+                            maxRows: 20,
+                            maxCols: 20,
+                        },
+                    },
+                    delimiter: {
+                        class: Delimiter,
+                        inlineToolbar: true
+                    },
                 },
                 onChange: async () => {
                     const content = await editorInstance.current.save();
                     const htmlContent = editorContentToHtml(content.blocks); // HTML'e dönüştür
                     console.log("HTML Content:" + htmlContent);
-                    pageA4.current.changeContent(htmlContent);
                 },
+                onReady: () => {
+                    const totalBlocks = editorInstance.current.blocks.getBlocksCount();
+                    for (let i = 0; i < totalBlocks; i++) {
+                        editorInstance.current.blocks.stretchBlock(i, true); // Tüm bloklar varsayılan olarak genişletilir
+                    }
+                }
             });
         } else {
             console.error("Element with ID 'editorjs' is missing.");
@@ -106,15 +134,7 @@ const Editor = () => {
     }, []);
 
     return (
-        <Box>
-            <Box>
-                <div id="editorjs" style={{ border: '1px solid black', minHeight: '300px' }} />
-                <PageA4 ref={pageA4} ></PageA4>
-            </Box>
-            <PDFViewer style={{ width: '100%', height: '100%' }}>
-                <PageA4 ref={pageA4} ></PageA4>
-            </PDFViewer>
-        </Box>
+        <div id="editorjs" />
     );
 };
 
