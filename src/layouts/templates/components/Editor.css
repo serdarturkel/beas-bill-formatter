@@ -12,7 +12,8 @@
 }
 
 .ce-block__content {
-    position: relative;
+    position: absolute;
+    display: inline;
     margin: 0;
     width: 100%;
     height: auto;
@@ -24,4 +25,8 @@
 
 .cdx-simple-image__caption {
     display: none;
+}
+.ce-toolbar__content {
+    position: absolute;
+    display: inline;
 }

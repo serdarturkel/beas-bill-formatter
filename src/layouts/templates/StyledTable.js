@@ -21,7 +21,8 @@ const StyledTable = ({ selectedElement, onStyleChange }) => {
                 margin: computedStyles.margin,
                 padding: computedStyles.padding,
                 position: computedStyles.position,
-                display: computedStyles.display
+                display: computedStyles.display,
+                border: computedStyles.border
             };
             const attrs = selectedElement.attributes;
             const attrObj = {};

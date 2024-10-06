@@ -36,7 +36,7 @@ const Editor = ({ onClick, id }) => {
         if (editorHolder) {
             // Eğer element DOM'da varsa, EditorJS'i başlat
             editorInstance.current = new EditorJS({
-                holder: 'editorjs-'+id,
+                holder: 'editorjs-' + id,
                 tools: {
                     header: {
                         class: Header,
@@ -49,7 +49,6 @@ const Editor = ({ onClick, id }) => {
                     paragraph: {
                         class: Paragraph,
                         inlineToolbar: true, // Gerekirse düzenlemeler yap
-
                         data: {
                             text: "Pharagraph",
                         }
@@ -111,10 +110,8 @@ const Editor = ({ onClick, id }) => {
                     const totalBlocks = editorInstance.current.blocks.getBlocksCount();
                     for (let i = 0; i < totalBlocks; i++) {
                         const block = editorInstance.current.blocks.getBlockByIndex(i);
-                        try {
+                        if(block.stretch){
                             block.stretch(true);
-                        } catch (e) {
-                            console.log(e);
                         }
                     }
                 }
@@ -126,13 +123,14 @@ const Editor = ({ onClick, id }) => {
         // Cleanup - bileşen unmount olduğunda editörü yok et
         return () => {
             if (editorInstance.current) {
-                editorInstance.current.destroy();
+                editorInstance.current.destroy(); // Editör örneğini yok et
+                editorInstance.current = null; // Editor örneğini null yap
             }
         };
     }, []);
 
     return (
-        <div onClick={onClick} id={"editorjs-"+id} />
+        <div onClick={onClick} id={"editorjs-" + id} />
     );
 };
 

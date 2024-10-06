@@ -10,8 +10,9 @@ import MDButton from 'components/MDButton';
 import StyledTable from './StyledTable';
 import DesignComponent from './DesignElement';
 import { useReactToPrint } from 'react-to-print';
+import ImageUpload from './ImageUpload';
 
-const A4Page = React.forwardRef((props) => {
+const A4Page = React.forwardRef(() => {
     const [bounds, setBounds] = useState({ left: 0, top: 0, right: 0, bottom: 0 });
 
     useEffect(() => {
@@ -27,8 +28,10 @@ const A4Page = React.forwardRef((props) => {
     }, []);
 
 
+    const [selectedComponent, setSelectedComponent] = useState(null);
 
     const [selectedElement, setSelectedElement] = useState(null);
+
 
     const handleStyleChange = (property, value) => {
         if (selectedElement) {
@@ -37,8 +40,11 @@ const A4Page = React.forwardRef((props) => {
     };
 
     const [components, setComponents] = useState([]);
-    const addComponent = () => {
-        const newId = `component-${Math.floor(Math.random() * 10000)}`;
+    const addComponent = (type) => {
+        const newId = {
+            type: type,
+            id: `component-${Math.floor(Math.random() * 10000)}`
+        };
         setComponents([...components, newId]);
     };
 
@@ -67,14 +73,21 @@ const A4Page = React.forwardRef((props) => {
             item3.forEach((item) => {
                 item.remove(); // Seçilen düğümü DOM'dan sil
             });
-
-            // Kalan HTML'i tekrar outerHTML olarak al
-            console.log(tempDiv.innerHTML);
-
-            console.log();
         }
         handlePrint(event);
     };
+    const deleteItem = (compId) => {
+        console.log("Delete Event Id:" + compId);
+        const updatedItems = components.filter((item) => item.id != compId);
+        setComponents(updatedItems);
+    }
+    const addDesignComponent = () => {
+        addComponent('design');
+    };
+    const addImageComponent = () => {
+        addComponent('image');
+    };
+
     return (
         <div>
             <Grid container justifyContent="center" spacing={1}>
@@ -87,12 +100,27 @@ const A4Page = React.forwardRef((props) => {
                 </Grid>
                 <Grid item xs={12} md={9} spacing={1}>
                     <div class="page-container" style={{ textAlign: 'left' }}>
-                        <Button className='primary' onClick={addComponent}>
+                        <Button className='primary' onClick={addDesignComponent}>
                             <Icon fontSize="small" color="inherit">
-                                add
+                                design_services
                             </Icon>
-                            Add New
+                            Add Design
                         </Button>
+
+                        <Button className='primary' onClick={addImageComponent}>
+                            <Icon fontSize="small" color="inherit">
+                                image
+                            </Icon>
+                            Add Image
+                        </Button>
+
+                        <Button className='primary' onClick={deleteItem}>
+                            <Icon fontSize="small" color="inherit">
+                                delete
+                            </Icon>
+                            Delete
+                        </Button>
+
                         <Button className='primary' onClick={print}>
                             <Icon fontSize="small" color="inherit">
                                 print
@@ -103,9 +131,17 @@ const A4Page = React.forwardRef((props) => {
                     <div class="page-container">
                         <div class="page" page-size="A4" layout="portrait">
                             <div id='pageContent' class="page-content" ref={componentRef}>
-                                {components.map((id) => (
-                                    <DesignComponent key={id} id={id} setSelectedElement={setSelectedElement} />
-                                ))}
+                                {
+                                    components.map((comp) => {
+                                        if (comp.type == 'design') {
+                                            return (<DesignComponent deleteEvent={deleteItem} key={comp.id} id={comp.id} setSelectedElement={setSelectedElement} />);
+                                        }
+                                        if (comp.type == 'image') {
+                                            return (<ImageUpload deleteEvent={deleteItem} key={comp.id} id={comp.id} setSelectedElement={setSelectedElement} />);
+                                        }
+                                        return (<span>comp not defined</span>);
+                                    })
+                                }
                             </div>
                         </div>
                     </div>

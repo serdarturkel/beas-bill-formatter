@@ -1,35 +1,21 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Rnd } from "react-rnd";
 import Editor from "./components/Editor";
+import { Button, Icon } from "@mui/material";
 
-const DesignComponent = ({setSelectedElement,id}) => {
+const DesignComponent = ({ deleteEvent, setSelectedElement, id }) => {
     const handleElementClick = (e) => {
-        const element = e.target;
-        console.log(element.classList);
-        // Elementin property isimlerini al
-        const propertyNames = Object.getOwnPropertyNames(element);
-
-        // Tüm property'leri ve değerlerini döngü ile konsola yazdır
-        propertyNames.forEach((property) => {
-            console.log(`${property}: ${element[property]}`);
-        });
-
-        const attributes = element.attributes;
-
-        // Tüm attribute'leri döngü ile konsola yazdır
-        for (let i = 0; i < attributes.length; i++) {
-            const attr = attributes[i];
-            console.log(`${attr.name}: ${attr.value}`);
-        }
-
         setSelectedElement(e.target);
+    };
+    const handleDeleteEvent = (e) => {
+        deleteEvent(id);
     };
 
     const [size, setSize] = useState({ width: 200, height: 200 });
     const [position, setPosition] = useState({ x: 0, y: 0 });
-
-
+    const rndRef = useRef(null)
     return (<Rnd
+        ref={rndRef}
         size={{ width: size.width, height: size.height }}
         position={{ x: position.x, y: position.y }}
         onDragStop={(e, d) => setPosition({ x: d.x, y: d.y })}
@@ -43,7 +29,19 @@ const DesignComponent = ({setSelectedElement,id}) => {
         minWidth={10}
         minHeight={10}
     >
-        {<Editor className="content-box" onClick={handleElementClick} id={id+"-editor"} />}
+        <Button onClick={handleDeleteEvent} className='primary' style={{
+            position: 'absolute',
+            bottom: '0px',
+            right: '0px',
+            cursor: 'pointer',
+            zIndex: 1000,
+        }}>
+            <Icon fontSize="small" color="inherit">
+                delete
+            </Icon>
+        </Button>
+
+        {<Editor className="content-box" onClick={handleElementClick} id={id} />}
     </Rnd>)
 };
 
