@@ -10,11 +10,18 @@
     width: 100%;
     box-sizing: border-box;
 }
+
 .ce-block__content {
     position: relative;
     margin: 0;
+    width: 100%;
+    height: auto;
     max-width: 210mm;
     max-height: 297mm;
     -webkit-transition: background-color .15s ease;
     transition: background-color .15s ease;
+}
+
+.cdx-simple-image__caption {
+    display: none;
 }

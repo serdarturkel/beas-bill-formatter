@@ -1,3 +1,17 @@
+.page-container {
+    background: rgba(255, 255, 255, 0.3);
+    padding: 0;
+    font-size: 12pt;
+    box-shadow: 4px 4px 4px 2px rgba(95, 95, 130, 0.454);
+    border-radius: 4px;
+    position: relative;
+    margin: 0;
+    width: 100%;
+    height: auto;
+    vertical-align: middle;
+    text-align: center;
+    padding: 1%;
+}
 .page {
     background: white;
     padding: 0;
@@ -6,7 +20,10 @@
     border-radius: 4px;
     min-width: 210mm;
     min-height: 297mm;
-    position: relative;
+    position: absolute;
+    display: inline-block;
+    margin: 0px 25% 0px 25% 0px;
+    text-align: left;
 }
 
 .page-content {
@@ -16,11 +33,12 @@
     position: relative;
     display: inline-block;
     border: dashed 0.5px #cccccc;
+    text-align: left;
 }
 
 .page[page-size="A4"][layout="portrait"] {
     position: relative;
-    margin: 0 25% 0 25%;
+    margin: 0;
     width: 210mm;
     height: 297mm;
 }
@@ -44,7 +62,36 @@
     cursor: move;
 }
 
+.content-box {
+    flex: 1;
+    height: 100%;
+    width: 100%;
+}
+
+.react-draggable {
+    border-left: dashed 1px darkgrey;
+    border-right: dashed 1px darkgrey;
+    margin:0px;
+    padding:0px;
+    background-color: #eeeeee55;;
+}
+.tc-table{
+    border: solid 1.5px #000000;
+}
+.tc-row{
+    border: solid 0.25px #000000;
+}
+.cdx-simple-image__caption {
+    display: none;
+}
 @media print {
+    .cdx-simple-image__caption {
+        display: none;
+    }
+    .react-draggable {
+        border: none!important;
+        background-color: transparent!important;
+    }
     .doNotPrint {
         display: none !important;
         visibility: hidden !important;
@@ -74,25 +121,4 @@
         width: 100%;
         height: 50%;
     }
-}
-
-.content-box {
-    border: solid 1px red;
-    flex: 1;
-    height: 100%;
-    width: 100%;
-}
-
-.react-draggable {
-    border-left: dashed 1px darkgrey;
-    border-right: dashed 1px darkgrey;
-    margin:0px;
-    padding:0px;
-    background-color: #eeeeee55;;
-}
-.tc-table{
-    border: solid 1.5px #000000;
-}
-.tc-row{
-    border: solid 0.25px #000000;
 }

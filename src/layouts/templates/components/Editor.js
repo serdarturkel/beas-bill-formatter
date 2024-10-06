@@ -3,24 +3,12 @@ import EditorJS from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import Paragraph from '@editorjs/paragraph';
 import List from '@editorjs/list';
-import Image from '@editorjs/image';
-import Styles from './Editor.css';
-import Quote from '@editorjs/quote';
 import NestedList from '@editorjs/nested-list';
-import { Checklist, Warning } from '@mui/icons-material';
-import Embed from '@editorjs/embed';
 import Delimiter from '@editorjs/delimiter';
-import CodeTool from '@editorjs/code';
-import { AttachesTool } from '@editorjs/attaches';
-import InlineCode from '@editorjs/inline-code';
-import simpleImage from '@editorjs/simple-image';
-import Marker from '@editorjs/marker';
 import LinkTool from '@editorjs/link';
 import Table from '@editorjs/table'
-import simpleImageUmd from '@editorjs/simple-image';
-
-
-const Editor = () => {
+import SimpleImage from '@editorjs/simple-image';
+const Editor = ({ onClick, id }) => {
 
     const editorInstance = useRef(null);
 
@@ -43,12 +31,12 @@ const Editor = () => {
 
     useEffect(() => {
         // İlk olarak, 'editorjs' id'sine sahip elementin DOM'da var olup olmadığını kontrol et
-        const editorHolder = document.getElementById('editorjs');
+        const editorHolder = document.getElementById('editorjs-' + id);
 
         if (editorHolder) {
             // Eğer element DOM'da varsa, EditorJS'i başlat
             editorInstance.current = new EditorJS({
-                holder: 'editorjs',
+                holder: 'editorjs-'+id,
                 tools: {
                     header: {
                         class: Header,
@@ -61,7 +49,7 @@ const Editor = () => {
                     paragraph: {
                         class: Paragraph,
                         inlineToolbar: true, // Gerekirse düzenlemeler yap
-                        
+
                         data: {
                             text: "Pharagraph",
                         }
@@ -69,6 +57,10 @@ const Editor = () => {
                     list: {
                         class: List,
                         inlineToolbar: true, // Gerekirse düzenlemeler yap
+                    },
+                    simpleImage: {
+                        class: SimpleImage,
+                        inlineToolbar: true,
                     },
                     image: {
                         class: Image,
@@ -108,6 +100,7 @@ const Editor = () => {
                         class: Delimiter,
                         inlineToolbar: true
                     },
+
                 },
                 onChange: async () => {
                     const content = await editorInstance.current.save();
@@ -117,7 +110,12 @@ const Editor = () => {
                 onReady: () => {
                     const totalBlocks = editorInstance.current.blocks.getBlocksCount();
                     for (let i = 0; i < totalBlocks; i++) {
-                        editorInstance.current.blocks.stretchBlock(i, true); // Tüm bloklar varsayılan olarak genişletilir
+                        const block = editorInstance.current.blocks.getBlockByIndex(i);
+                        try {
+                            block.stretch(true);
+                        } catch (e) {
+                            console.log(e);
+                        }
                     }
                 }
             });
@@ -134,7 +132,7 @@ const Editor = () => {
     }, []);
 
     return (
-        <div id="editorjs" />
+        <div onClick={onClick} id={"editorjs-"+id} />
     );
 };
 
