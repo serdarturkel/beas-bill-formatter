@@ -1,5 +1,6 @@
 
-import styles from "./A4Page.css";
+import "./A4Page.css";
+import "react-resizable/css/styles.css"; 
 
 import { Icon, Grid, Button } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
