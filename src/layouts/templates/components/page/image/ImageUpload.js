@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Draggable from 'react-draggable';
 import { ResizableBox } from 'react-resizable';
 
-const ImageUpload = ({ deleteEvent, setSelectedElement, id }) => {
+const ImageUpload = ({ deleteEvent, setSelectedElement, setSelectedOrigin, id }) => {
     const handleDeleteEvent = (e) => {
         deleteEvent(id);
     };
@@ -22,6 +22,7 @@ const ImageUpload = ({ deleteEvent, setSelectedElement, id }) => {
     };
     const handleElementClick = (e) => {
         setSelectedElement(e.target);
+        setSelectedOrigin(id);
     };
     const VisuallyHiddenInput = styled('input')({
         clip: 'rect(0 0 0 0)',
@@ -70,7 +71,8 @@ const ImageUpload = ({ deleteEvent, setSelectedElement, id }) => {
                         boxSizing: "border-box",
                     }}
                 >
-                    <Icon fontSize="small" color="inherit" color="info"
+                    <Icon fontSize="small" color="inherit"
+                        color={"info"}
                         className="drag-handle"
                         style={{
                             position: "absolute",
@@ -85,7 +87,8 @@ const ImageUpload = ({ deleteEvent, setSelectedElement, id }) => {
                         }}>
                         drag_handle
                     </Icon>
-                    <Icon onClick={handleDeleteEvent} fontSize="small" color="inherit" color="info"
+                    <Icon onClick={handleDeleteEvent} fontSize="small" color="inherit"
+                        color={"info"}
                         className="drag-handle"
                         style={{
                             position: "absolute",
@@ -119,7 +122,7 @@ const ImageUpload = ({ deleteEvent, setSelectedElement, id }) => {
                         </Button>
                     )}
                     {imageData && (
-                        <img id={id} onClick={handleElementClick}  src={imageData} alt="Selected" className='centered-img' />
+                        <img id={id} onClick={handleElementClick} src={imageData} alt="Selected" className='centered-img' />
                     )}
                 </div>
             </ResizableBox>

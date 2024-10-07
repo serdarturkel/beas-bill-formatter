@@ -1,4 +1,5 @@
 import { Padding, Style } from '@mui/icons-material';
+import zIndex from '@mui/material/styles/zIndex';
 import React, { useState, useEffect } from 'react';
 import { position } from 'stylis';
 
@@ -22,7 +23,8 @@ const StyledTable = ({ selectedElement, onStyleChange }) => {
                 padding: computedStyles.padding,
                 position: computedStyles.position,
                 display: computedStyles.display,
-                border: computedStyles.border
+                border: computedStyles.border,
+                zIndex: computedStyles.zIndex,
             };
             const attrs = selectedElement.attributes;
             const attrObj = {};

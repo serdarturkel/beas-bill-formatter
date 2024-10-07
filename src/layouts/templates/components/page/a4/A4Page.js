@@ -1,38 +1,28 @@
 
-import Draggable from 'react-draggable';
 import styles from "./A4Page.css";
-import Editor from "./components/Editor";
+
 import { Icon, Grid, Button } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
-import { ResizableBox } from 'react-resizable';
-import { Rnd } from 'react-rnd';
-import MDButton from 'components/MDButton';
-import StyledTable from './StyledTable';
-import DesignComponent from './DesignElement';
+import StyledTable from '../styledTable/StyledTable';
+import DesignComponent from '../design/DesignElement';
 import { useReactToPrint } from 'react-to-print';
-import ImageUpload from './ImageUpload';
-import DraggableResizableDiv from './DraggableResizableDiv';
+import ImageUpload from '../image/ImageUpload';
+
 
 const A4Page = React.forwardRef(() => {
-    const [bounds, setBounds] = useState({ left: 0, top: 0, right: 0, bottom: 0 });
+    const [selectedOrigin, setSelectedOrigin] = useState(null);
+    const [selectedElement, setSelectedElement] = useState(null);
+    const [components, setComponents] = useState([]);
+    const componentRef = useRef();
+    const handlePrint = useReactToPrint({ contentRef: componentRef });
+
+    const changeZIndex = (clickedId) => {
+        setComponents(prevComponents => prevComponents.map(comp => ({ ...comp, zIndex: comp.id === clickedId ? 1 : 0 })));
+    };
 
     useEffect(() => {
-        if (componentRef.current) {
-            const container = componentRef.current;
-            setBounds({
-                left: 0,
-                top: 0,
-                right: container.clientWidth,
-                bottom: container.clientHeight,
-            });
-        }
-    }, []);
-
-
-    const [selectedComponent, setSelectedComponent] = useState(null);
-
-    const [selectedElement, setSelectedElement] = useState(null);
-
+        changeZIndex(selectedOrigin);
+    }, [selectedOrigin]);
 
     const handleStyleChange = (property, value) => {
         if (selectedElement) {
@@ -40,20 +30,16 @@ const A4Page = React.forwardRef(() => {
         }
     };
 
-    const [components, setComponents] = useState([]);
+
     const addComponent = (type) => {
         const newId = {
             type: type,
-            id: `component-${Math.floor(Math.random() * 10000)}`
+            id: `component-${Math.floor(Math.random() * 10000)}`,
+            zIndex: 1000
         };
         setComponents([...components, newId]);
     };
 
-    const componentRef = useRef();
-
-    const handlePrint = useReactToPrint({
-        contentRef: componentRef
-    });
     const print = (event) => {
         const printElement = componentRef.current;
         if (printElement) {
@@ -79,7 +65,7 @@ const A4Page = React.forwardRef(() => {
     };
     const deleteItem = (compId) => {
         console.log("Delete Event Id:" + compId);
-        const updatedItems = components.filter((item) => item.id != compId);
+        const updatedItems = components.filter((item) => item.id !== compId);
         setComponents(updatedItems);
     }
     const addDesignComponent = () => {
@@ -91,6 +77,7 @@ const A4Page = React.forwardRef(() => {
 
     return (
         <div>
+            
             <Grid container justifyContent="center" spacing={1}>
                 <Grid item xs={12} md={3}>
                     <div class="page-container">
@@ -127,11 +114,12 @@ const A4Page = React.forwardRef(() => {
                             <div id='pageContent' class="page-content" ref={componentRef}>
                                 {
                                     components.map((comp) => {
-                                        if (comp.type == 'design') {
-                                            return (<DesignComponent deleteEvent={deleteItem} key={comp.id} id={comp.id} setSelectedElement={setSelectedElement} />);
+                                        const style = { zIndex: comp.zIndex };
+                                        if (comp.type === 'design') {
+                                            return (<DesignComponent style={style} deleteEvent={deleteItem} key={comp.id} id={comp.id} setSelectedElement={setSelectedElement} setSelectedOrigin={setSelectedOrigin} />);
                                         }
-                                        if (comp.type == 'image') {
-                                            return (<ImageUpload deleteEvent={deleteItem} key={comp.id} id={comp.id} setSelectedElement={setSelectedElement} />);
+                                        if (comp.type === 'image') {
+                                            return (<ImageUpload style={style} deleteEvent={deleteItem} key={comp.id} id={comp.id} setSelectedElement={setSelectedElement} setSelectedOrigin={setSelectedOrigin} />);
                                         }
                                         return (<span>comp not defined</span>);
                                     })

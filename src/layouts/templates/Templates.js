@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import MDBox from "components/MDBox";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import A4Page from "./A4Page";
+import A4Page from "./components/page/a4/A4Page";
 import { useReactToPrint } from "react-to-print";
 
 

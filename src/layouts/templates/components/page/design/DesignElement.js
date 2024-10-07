@@ -1,19 +1,19 @@
 import { useEffect, useRef, useState } from "react";
-import { Rnd } from "react-rnd";
-import Editor from "./components/Editor";
-import { Button, Icon } from "@mui/material";
-import { ResizableBox } from "react-resizable";
+import Editor from "../../editor/Editor";
+import { Icon } from "@mui/material";
 import Draggable from "react-draggable";
+import { ResizableBox } from "react-resizable";
 
-const DesignComponent = ({ deleteEvent, setSelectedElement, id }) => {
+const DesignComponent = ({ deleteEvent, setSelectedElement, setSelectedOrigin, id }) => {
     const handleElementClick = (e) => {
         setSelectedElement(e.target);
+        setSelectedOrigin(id);
     };
     const handleDeleteEvent = (e) => {
         deleteEvent(id);
     };
 
-    
+
     const rndRef = useRef(null)
     const contentRef = useRef(null);
     const [dimensions, setDimensions] = useState({ width: 150, height: 60 });
@@ -44,14 +44,14 @@ const DesignComponent = ({ deleteEvent, setSelectedElement, id }) => {
                 <div
                     style={{
                         position: "relative",
-                        border: "1px solid black",
                         padding: "10px",
                         height: "100%",
                         width: "100%",
                         boxSizing: "border-box",
+                        border: "1px solid black",
                     }}
                 >
-                    <Icon fontSize="small" color="inherit" color="info"
+                    <Icon fontSize="small" color="inherit"
                         className="drag-handle"
                         style={{
                             position: "absolute",
@@ -66,7 +66,7 @@ const DesignComponent = ({ deleteEvent, setSelectedElement, id }) => {
                         }}>
                         drag_handle
                     </Icon>
-                    <Icon onClick={handleDeleteEvent} fontSize="small" color="inherit" color="info"
+                    <Icon onClick={handleDeleteEvent} fontSize="small" color="inherit"
                         className="drag-handle"
                         style={{
                             position: "absolute",
