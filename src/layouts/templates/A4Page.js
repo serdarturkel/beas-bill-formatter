@@ -114,13 +114,6 @@ const A4Page = React.forwardRef(() => {
                             Add Image
                         </Button>
 
-                        <Button className='primary' onClick={deleteItem}>
-                            <Icon fontSize="small" color="inherit">
-                                delete
-                            </Icon>
-                            Delete
-                        </Button>
-
                         <Button className='primary' onClick={print}>
                             <Icon fontSize="small" color="inherit">
                                 print

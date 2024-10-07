@@ -29,17 +29,23 @@ const DesignComponent = ({ deleteEvent, setSelectedElement, id }) => {
         minWidth={10}
         minHeight={10}
     >
-        <Button onClick={handleDeleteEvent} className='primary' style={{
+        <Icon onClick={handleDeleteEvent} fontSize="small" color="inherit" className="doNotPrint" style={{
             position: 'absolute',
-            bottom: '0px',
-            right: '0px',
+            left: '-25px',
+            top: '-1px',
             cursor: 'pointer',
+            border: 'solid 1px #ccaaff',
+            borderRadius: '3px',
+            backgroundColor:'#ffaacc5c',
+            padding: 0,
+            margin: 0,
+            width: '24px',
+            height: '24px',
             zIndex: 1000,
         }}>
-            <Icon fontSize="small" color="inherit">
-                delete
-            </Icon>
-        </Button>
+            delete
+        </Icon>
+
 
         {<Editor className="content-box" onClick={handleElementClick} id={id} />}
     </Rnd>)

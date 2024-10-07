@@ -54,17 +54,22 @@ const ImageUpload = ({ deleteEvent, setSelectedElement, id }) => {
                 minHeight={10}
                 enableUserSelectHack={false}
             >
-                <Button onClick={handleDeleteEvent} className='primary' style={{
+                <Icon onClick={handleDeleteEvent} className='doNotPrint' fontSize="small" color="inherit" style={{
                     position: 'absolute',
-                    bottom: '0px',
-                    right: '0px',
+                    left: '-25px',
+                    top: '-1px',
                     cursor: 'pointer',
+                    border: 'solid 1px #ccaaff',
+                    borderRadius: '3px',
+                    backgroundColor: '#ffaacc5c',
+                    padding: 0,
+                    margin: 0,
+                    width: '24px',
+                    height: '24px',
                     zIndex: 1000,
                 }}>
-                    <Icon fontSize="small" color="inherit">
-                        delete
-                    </Icon>
-                </Button>
+                    delete
+                </Icon>
                 {!imageData && (
                     <Button
                         component="label"
