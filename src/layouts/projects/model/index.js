@@ -13,16 +13,6 @@ const ProjectModel = {
             sortable: true,
         },
         {
-            name: 'Description',
-            selector: row => row.description,
-            sortable: true,
-        },
-        {
-            name: 'Image',
-            selector: row => row.image,
-            sortable: true,
-        },
-        {
             name: 'Created By',
             selector: row => row.createdBy,
             sortable: true,

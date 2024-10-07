@@ -1,7 +1,9 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Rnd } from "react-rnd";
 import Editor from "./components/Editor";
 import { Button, Icon } from "@mui/material";
+import { ResizableBox } from "react-resizable";
+import Draggable from "react-draggable";
 
 const DesignComponent = ({ deleteEvent, setSelectedElement, id }) => {
     const handleElementClick = (e) => {
@@ -11,44 +13,79 @@ const DesignComponent = ({ deleteEvent, setSelectedElement, id }) => {
         deleteEvent(id);
     };
 
-    const [size, setSize] = useState({ width: 200, height: 200 });
-    const [position, setPosition] = useState({ x: 0, y: 0 });
+    
     const rndRef = useRef(null)
-    return (<Rnd
-        ref={rndRef}
-        size={{ width: size.width, height: size.height }}
-        position={{ x: position.x, y: position.y }}
-        onDragStop={(e, d) => setPosition({ x: d.x, y: d.y })}
-        onResize={(e, direction, ref, delta, position) => {
-            setSize({
-                width: ref.style.width,
-                height: ref.style.height,
+    const contentRef = useRef(null);
+    const [dimensions, setDimensions] = useState({ width: 150, height: 60 });
+    const [isResizing, setIsResizing] = useState(false); // Resizable durumu kontrolü
+    useEffect(() => {
+        if (contentRef.current) {
+            const { scrollHeight, scrollWidth } = contentRef.current;
+            setDimensions({
+                width: Math.max(scrollWidth + 20, 200), // Min width 200
+                height: Math.max(scrollHeight + 20, 200), // Min height 200
             });
-            setPosition(position);
-        }}
-        minWidth={10}
-        minHeight={10}
-    >
-        <Icon onClick={handleDeleteEvent} fontSize="small" color="inherit" className="doNotPrint" style={{
-            position: 'absolute',
-            left: '-25px',
-            top: '-1px',
-            cursor: 'pointer',
-            border: 'solid 1px #ccaaff',
-            borderRadius: '3px',
-            backgroundColor:'#ffaacc5c',
-            padding: 0,
-            margin: 0,
-            width: '24px',
-            height: '24px',
-            zIndex: 1000,
-        }}>
-            delete
-        </Icon>
-
-
-        {<Editor className="content-box" onClick={handleElementClick} id={id} />}
-    </Rnd>)
+        }
+    }, [contentRef]);
+    return (
+        <Draggable ref={rndRef}
+            handle=".drag-handle" // Sadece taşıma ikonu üzerinden taşımayı aktif et
+            disabled={isResizing}  // Boyutlandırma sırasında taşıma özelliğini devre dışı bırak
+        >
+            <ResizableBox
+                width={dimensions.width}
+                height={dimensions.height}
+                resizeHandles={["se", "e", "s"]}
+                minConstraints={[10, 10]} // Min boyutlar
+                maxConstraints={[1920, 1080]} // Max boyutlar
+                onResizeStart={() => setIsResizing(true)} // Boyutlandırma başlıyor
+                onResizeStop={() => setIsResizing(false)} // Boyutlandırma bitiyor
+            >
+                <div
+                    style={{
+                        position: "relative",
+                        border: "1px solid black",
+                        padding: "10px",
+                        height: "100%",
+                        width: "100%",
+                        boxSizing: "border-box",
+                    }}
+                >
+                    <Icon fontSize="small" color="inherit" color="info"
+                        className="drag-handle"
+                        style={{
+                            position: "absolute",
+                            top: -28,
+                            left: 0,
+                            cursor: "move",
+                            backgroundColor: "white",
+                            border: 'solid 1px lightgray',
+                            borderRadius: '3px',
+                            width: "24px",
+                            height: "24px",
+                        }}>
+                        drag_handle
+                    </Icon>
+                    <Icon onClick={handleDeleteEvent} fontSize="small" color="inherit" color="info"
+                        className="drag-handle"
+                        style={{
+                            position: "absolute",
+                            top: -28,
+                            left: 28,
+                            cursor: "pointer",
+                            backgroundColor: "white",
+                            border: 'solid 1px lightgray',
+                            borderRadius: '3px',
+                            width: "24px",
+                            height: "24px",
+                        }}>
+                        delete
+                    </Icon>
+                    {<Editor onClick={handleElementClick} id={id} ref={contentRef} />}
+                </div>
+            </ResizableBox>
+        </Draggable>
+    )
 };
 
 export default DesignComponent;

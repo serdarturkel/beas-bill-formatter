@@ -11,6 +11,7 @@ import StyledTable from './StyledTable';
 import DesignComponent from './DesignElement';
 import { useReactToPrint } from 'react-to-print';
 import ImageUpload from './ImageUpload';
+import DraggableResizableDiv from './DraggableResizableDiv';
 
 const A4Page = React.forwardRef(() => {
     const [bounds, setBounds] = useState({ left: 0, top: 0, right: 0, bottom: 0 });
@@ -99,7 +100,7 @@ const A4Page = React.forwardRef(() => {
                     </div>
                 </Grid>
                 <Grid item xs={12} md={9} spacing={1}>
-                    <div class="page-container" style={{ textAlign: 'left' }}>
+                    <div class="page-container">
                         <Button className='primary' onClick={addDesignComponent}>
                             <Icon fontSize="small" color="inherit">
                                 design_services

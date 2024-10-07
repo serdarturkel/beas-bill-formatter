@@ -58,90 +58,23 @@
     width: 210mm;
     height: 148mm;
 }
-
-.moveIcon {
-    cursor: move;
-}
-
-.content-box {
-    flex: 1;
-    height: 100%;
-    width: 100%;
-}
-
-.react-draggable {
-    border: dashed 1px darkgrey;
-    background-color: #eeeeee55;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
-
+/* additional css*/
+/* css styles */
 .centered-img {
-    max-width: calc(100%);
-    max-height: calc(100%);
-    width: auto;
+    width: 100%;
     height: auto;
+    max-width: 100%;
+    max-height: 100%;
 }
 
-.ce-block {
-    border: solid 0.5px #999999;
-    border-radius: 3px;
-}
+/*****/
 
-.tc-table {
-    border: solid 1.5px #000000;
-}
-
-.tc-row {
-    border: solid 0.25px #000000;
-}
-
-.cdx-simple-image__caption {
-    display: none;
-}
-
-.delete-icon {
-    position: 'absolute';
-    left: '-25px';
-    top: '-1px';
-    cursor: 'pointer';
-    border: 'solid 1px #ccaaff';
-    border-radius: '3px';
-    background-color: '#ffaacc5c';
-    padding: 0;
-    margin: 0;
-    width: '24px';
-    height: '24px';
-    z-index: 1000;
-}
 
 @media print {
-    .ce-block {
-        border: none;
-        border-radius: 0;
-    }
-
-    .delete-icon {
-        display: none;
-    }
-
-    .cdx-simple-image__caption {
-        display: none;
-    }
-
-    .react-draggable {
-        border: none !important;
-        background-color: transparent !important;
-    }
 
     .doNotPrint {
         display: none !important;
         visibility: hidden !important;
-    }
-
-    .ce-toolbar {
-        display: none;
     }
 
     @page {

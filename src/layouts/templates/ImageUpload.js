@@ -1,9 +1,8 @@
-import { width } from '@mui/system';
-import React, { useRef, useState } from 'react';
-import { Rnd } from 'react-rnd';
-import ImageUploadCss from './ImageUpload.css';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, Icon } from '@mui/material';
 import styled from 'styled-components';
+import Draggable from 'react-draggable';
+import { ResizableBox } from 'react-resizable';
 
 const ImageUpload = ({ deleteEvent, setSelectedElement, id }) => {
     const handleDeleteEvent = (e) => {
@@ -21,7 +20,9 @@ const ImageUpload = ({ deleteEvent, setSelectedElement, id }) => {
             reader.readAsDataURL(file); // Binary olarak veriyi okuyoruz
         }
     };
-
+    const handleElementClick = (e) => {
+        setSelectedElement(e.target);
+    };
     const VisuallyHiddenInput = styled('input')({
         clip: 'rect(0 0 0 0)',
         clipPath: 'inset(50%)',
@@ -33,67 +34,97 @@ const ImageUpload = ({ deleteEvent, setSelectedElement, id }) => {
         whiteSpace: 'nowrap',
         width: 1,
     });
-
-    const [size, setSize] = useState({ width: 200, height: 200 });
-    const [position, setPosition] = useState({ x: 0, y: 0 });
+    const contentRef = useRef(null);
+    const [imageDimension, setDimensions] = useState({ width: 150, height: 60 });
+    const [isResizing, setIsResizing] = useState(false); // Resizable durumu kontrolü
+    useEffect(() => {
+        if (contentRef.current) {
+            const { scrollHeight, scrollWidth } = contentRef.current;
+            setDimensions({
+                width: Math.max(scrollWidth + 20, 200), // Min width 200
+                height: Math.max(scrollHeight + 20, 200), // Min height 200
+            });
+        }
+    }, [imageData]);
     return (
-        <div>
-            <Rnd
-                ref={rndRef}
-                size={{ width: size.width, height: size.height }}
-                position={{ x: position.x, y: position.y }}
-                onDragStop={(e, d) => setPosition({ x: d.x, y: d.y })}
-                onResize={(e, direction, ref, delta, position) => {
-                    setSize({
-                        width: ref.style.width,
-                        height: ref.style.height,
-                    });
-                    setPosition(position);
-                }}
-                minWidth={10}
-                minHeight={10}
-                enableUserSelectHack={false}
+        <Draggable ref={rndRef}
+            handle=".drag-handle" // Sadece taşıma ikonu üzerinden taşımayı aktif et
+            disabled={isResizing}  // Boyutlandırma sırasında taşıma özelliğini devre dışı bırak
+        >
+            <ResizableBox
+                width={imageDimension.width}
+                height={imageDimension.height}
+                resizeHandles={["se", "e", "s"]}
+                minConstraints={[10, 10]} // Min boyutlar
+                maxConstraints={[1920, 1080]} // Max boyutlar
+                onResizeStart={() => setIsResizing(true)} // Boyutlandırma başlıyor
+                onResizeStop={() => setIsResizing(false)} // Boyutlandırma bitiyor
             >
-                <Icon onClick={handleDeleteEvent} className='doNotPrint' fontSize="small" color="inherit" style={{
-                    position: 'absolute',
-                    left: '-25px',
-                    top: '-1px',
-                    cursor: 'pointer',
-                    border: 'solid 1px #ccaaff',
-                    borderRadius: '3px',
-                    backgroundColor: '#ffaacc5c',
-                    padding: 0,
-                    margin: 0,
-                    width: '24px',
-                    height: '24px',
-                    zIndex: 1000,
-                }}>
-                    delete
-                </Icon>
-                {!imageData && (
-                    <Button
-                        component="label"
-                        role={undefined}
-                        variant="contained"
-                        tabIndex={-1}
-                        color='white'
-                    >
-                        <Icon fontSize="small">
-                            uploadFile
-                        </Icon>
-                        <VisuallyHiddenInput
-                            type="file"
-                            onChange={handleFileChange}
-                            multiple
-                        />
-                    </Button>
-                )}
-                {imageData && (
-                    <img id={id} ref={setSelectedElement} src={imageData} alt="Selected" className='centered-img' />
-                )}
-            </Rnd>
-        </div>
-    );
+                <div
+                    style={{
+                        position: "relative",
+                        border: "0.5px dotted black",
+                        padding: "10px",
+                        height: "100%",
+                        width: "100%",
+                        boxSizing: "border-box",
+                    }}
+                >
+                    <Icon fontSize="small" color="inherit" color="info"
+                        className="drag-handle"
+                        style={{
+                            position: "absolute",
+                            top: -28,
+                            left: 0,
+                            cursor: "move",
+                            backgroundColor: "white",
+                            border: 'solid 1px lightgray',
+                            borderRadius: '3px',
+                            width: "24px",
+                            height: "24px",
+                        }}>
+                        drag_handle
+                    </Icon>
+                    <Icon onClick={handleDeleteEvent} fontSize="small" color="inherit" color="info"
+                        className="drag-handle"
+                        style={{
+                            position: "absolute",
+                            top: -28,
+                            left: 28,
+                            cursor: "pointer",
+                            backgroundColor: "white",
+                            border: 'solid 1px lightgray',
+                            borderRadius: '3px',
+                            width: "24px",
+                            height: "24px",
+                        }}>
+                        delete
+                    </Icon>
+                    {!imageData && (
+                        <Button
+                            component="label"
+                            role={undefined}
+                            variant="contained"
+                            tabIndex={-1}
+                            color='white'
+                        >
+                            <Icon fontSize="small">
+                                uploadFile
+                            </Icon>
+                            <VisuallyHiddenInput
+                                type="file"
+                                onChange={handleFileChange}
+                                multiple
+                            />
+                        </Button>
+                    )}
+                    {imageData && (
+                        <img id={id} onClick={handleElementClick}  src={imageData} alt="Selected" className='centered-img' />
+                    )}
+                </div>
+            </ResizableBox>
+        </Draggable>
+    )
 };
 
 export default ImageUpload;
