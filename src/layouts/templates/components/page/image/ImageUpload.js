@@ -3,7 +3,7 @@ import { Button, Icon } from '@mui/material';
 import styled from 'styled-components';
 import Draggable from 'react-draggable';
 import { ResizableBox } from 'react-resizable';
-
+import '../style/General.css';
 const ImageUpload = ({ deleteEvent, setSelectedElement, setSelectedOrigin, id }) => {
     const handleDeleteEvent = (e) => {
         deleteEvent(id);
@@ -49,8 +49,9 @@ const ImageUpload = ({ deleteEvent, setSelectedElement, setSelectedOrigin, id })
     }, [imageData]);
     return (
         <Draggable ref={rndRef}
-            handle=".drag-handle" // Sadece taşıma ikonu üzerinden taşımayı aktif et
-            disabled={isResizing}  // Boyutlandırma sırasında taşıma özelliğini devre dışı bırak
+            handle=".drag-handle"
+            disabled={isResizing}
+            bounds="parent"
         >
             <ResizableBox
                 width={imageDimension.width}
@@ -61,16 +62,7 @@ const ImageUpload = ({ deleteEvent, setSelectedElement, setSelectedOrigin, id })
                 onResizeStart={() => setIsResizing(true)} // Boyutlandırma başlıyor
                 onResizeStop={() => setIsResizing(false)} // Boyutlandırma bitiyor
             >
-                <div
-                    style={{
-                        position: "relative",
-                        border: "0.5px dotted black",
-                        padding: "10px",
-                        height: "100%",
-                        width: "100%",
-                        boxSizing: "border-box",
-                    }}
-                >
+                <div className='draggableContent'>
                     <Icon fontSize="small" color="inherit"
                         color={"info"}
                         className="drag-handle"
@@ -105,6 +97,7 @@ const ImageUpload = ({ deleteEvent, setSelectedElement, setSelectedOrigin, id })
                     </Icon>
                     {!imageData && (
                         <Button
+                            className='center-in-box'
                             component="label"
                             role={undefined}
                             variant="contained"

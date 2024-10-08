@@ -8,6 +8,8 @@ import Delimiter from '@editorjs/delimiter';
 import LinkTool from '@editorjs/link';
 import Table from '@editorjs/table'
 import SimpleImage from '@editorjs/simple-image';
+import "./Editor.css";
+
 const Editor = ({ onClick, id }) => {
 
     const editorInstance = useRef(null);

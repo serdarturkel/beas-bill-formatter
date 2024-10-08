@@ -3,7 +3,7 @@ import Editor from "../../editor/Editor";
 import { Icon } from "@mui/material";
 import Draggable from "react-draggable";
 import { ResizableBox } from "react-resizable";
-
+import '../style/General.css';
 const DesignComponent = ({ deleteEvent, setSelectedElement, setSelectedOrigin, id }) => {
     const handleElementClick = (e) => {
         setSelectedElement(e.target);
@@ -31,6 +31,7 @@ const DesignComponent = ({ deleteEvent, setSelectedElement, setSelectedOrigin, i
         <Draggable ref={rndRef}
             handle=".drag-handle" // Sadece taşıma ikonu üzerinden taşımayı aktif et
             disabled={isResizing}  // Boyutlandırma sırasında taşıma özelliğini devre dışı bırak
+            bounds="parent"
         >
             <ResizableBox
                 width={dimensions.width}
@@ -41,16 +42,7 @@ const DesignComponent = ({ deleteEvent, setSelectedElement, setSelectedOrigin, i
                 onResizeStart={() => setIsResizing(true)} // Boyutlandırma başlıyor
                 onResizeStop={() => setIsResizing(false)} // Boyutlandırma bitiyor
             >
-                <div
-                    style={{
-                        position: "relative",
-                        padding: "10px",
-                        height: "100%",
-                        width: "100%",
-                        boxSizing: "border-box",
-                        border: "1px solid black",
-                    }}
-                >
+                <div className="draggableContent">
                     <Icon fontSize="small" color="inherit"
                         className="drag-handle"
                         style={{

@@ -1,0 +1,21 @@
+.draggableContent {
+    position: relative;
+    padding: 1%;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    border: dashed 1px lightgrey;
+}
+
+.center-in-box {
+    margin: 25%;
+    width: 50%;
+    height: 50%;
+}
+
+.propertiesPanel {
+    background-color: rgb(100, 100, 140);
+    color: white;
+    padding: 4px;
+    border-radius: 3px;
+}

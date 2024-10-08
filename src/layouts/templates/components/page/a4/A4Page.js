@@ -9,7 +9,7 @@ import { useReactToPrint } from 'react-to-print';
 import ImageUpload from '../image/ImageUpload';
 
 
-const A4Page = React.forwardRef(({setSelectedElement}) => {
+const A4Page = React.forwardRef(({ setSelectedElement }) => {
     const [selectedOrigin, setSelectedOrigin] = useState(null);
     const [components, setComponents] = useState([]);
     const componentRef = useRef();
@@ -28,7 +28,7 @@ const A4Page = React.forwardRef(({setSelectedElement}) => {
         const newId = {
             type: type,
             id: `component-${Math.floor(Math.random() * 10000)}`,
-            zIndex: 1000
+            zIndex: type.zIndex
         };
         setComponents([...components, newId]);
     };
@@ -67,10 +67,19 @@ const A4Page = React.forwardRef(({setSelectedElement}) => {
     const addImageComponent = () => {
         addComponent('image');
     };
+    const savePage = () => {
+        console.log("SAVE PAGE");
+    };
 
     return (
         <div>
             <div class="page-container">
+                <Button className='primary' onClick={savePage}>
+                    <Icon fontSize="small" color="inherit">
+                        save
+                    </Icon>
+                    Save
+                </Button>
                 <Button className='primary' onClick={addDesignComponent}>
                     <Icon fontSize="small" color="inherit">
                         design_services

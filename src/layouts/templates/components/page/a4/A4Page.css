@@ -2,8 +2,7 @@
     background: rgba(255, 255, 255, 0.3);
     padding: 0;
     font-size: 12pt;
-    box-shadow: 4px 4px 4px 2px rgba(95, 95, 130, 0.454);
-    border-radius: 4px;
+    border-radius: 2px;
     position: relative;
     margin: 0;
     width: 100%;
@@ -11,13 +10,13 @@
     vertical-align: middle;
     text-align: center;
     padding: 1%;
+    box-shadow: 1px 1px 1px 1px rgb(150, 150, 150);
 }
 
 .page {
     background: white;
     padding: 0;
     font-size: 12pt;
-    box-shadow: 4px 4px 4px 2px rgba(95, 95, 130, 0.454);
     border-radius: 4px;
     min-width: 210mm;
     min-height: 297mm;
@@ -58,6 +57,7 @@
     width: 210mm;
     height: 148mm;
 }
+
 /* additional css*/
 /* css styles */
 .centered-img {
@@ -67,10 +67,28 @@
     max-height: 100%;
 }
 
+.draggableContent {
+    position: absolute;
+}
+
 /*****/
 
-
 @media print {
+    .react-resizable-handle {
+        border: none !important;
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    .draggableContent {
+        border: none !important;
+        box-sizing: none !important;
+    }
+
+    .drag-handle {
+        display: none !important;
+        visibility: hidden !important;
+    }
 
     .doNotPrint {
         display: none !important;

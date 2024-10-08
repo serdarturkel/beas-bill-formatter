@@ -1,9 +1,8 @@
-import { Padding, Style } from '@mui/icons-material';
-import { Input } from '@mui/material';
-import zIndex from '@mui/material/styles/zIndex';
+
+import { Icon, Input, TextField } from '@mui/material';
 import React, { useState, useEffect, useRef } from 'react';
-import { SketchPicker } from 'react-color';
-import { position } from 'stylis';
+import Draggable from 'react-draggable';
+import '../style/General.css';
 
 // Stil tablosu komponenti
 const StyledTable = ({ selectedElement, onStyleChange }) => {
@@ -28,6 +27,10 @@ const StyledTable = ({ selectedElement, onStyleChange }) => {
                 border: computedStyles.border,
                 zIndex: computedStyles.zIndex,
                 font: computedStyles.font,
+                fontWeight: computedStyles.fontWeight,
+                textAlign: computedStyles.textAlign,
+                textDecoration: computedStyles.textDecoration,
+                borderRadius: computedStyles.borderRadius,
             };
             const attrs = selectedElement.attributes;
             const attrObj = {};
@@ -80,7 +83,7 @@ const StyledTable = ({ selectedElement, onStyleChange }) => {
         } else {
             return (<input
                 id={style + "-" + Math.floor(Math.random() * 10000)}
-                style={{ fontSize: "8pt", width: "80%" }}
+                style={{ fontSize: "8pt", width: "100%" }}
                 type="text"
                 name={style}
                 value={styles[style]}
@@ -195,59 +198,72 @@ const StyledTable = ({ selectedElement, onStyleChange }) => {
         return `#${hexR}${hexG}${hexB}${hexA}`; // Alpha ile birlikte döner
     };
     return (
-        <div style={{ fontSize: '8pt', textAlign: 'left' }}>
-            <table>
-                <caption><h2>Properties</h2></caption>
-                <tbody>
-                    <tr>
-                        <td colSpan={2}>
-                            <h4>Styles</h4>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Property</th>
-                        <th>Value</th>
-                    </tr>
-                    <tr>
-                        <td colSpan={2}>
-
-                        </td>
-                    </tr>
-                    {Object.keys(styles).map((style) => (
-                        <tr key={style}>
-                            <td>{style}</td>
+        <Draggable
+            handle=".drag-handle"
+        >
+            <div className='draggableContent' style={{ fontSize: '8pt', textAlign: 'left', zIndex: 999999, backgroundColor: 'white' }}>
+                <Icon fontSize="small" color="inherit"
+                    className="drag-handle"
+                    style={{
+                        position: "absolute",
+                        top: 0,
+                        left: -28,
+                        cursor: "move",
+                        backgroundColor: "white",
+                        border: 'solid 1px lightgray',
+                        borderRadius: '3px',
+                        width: "24px",
+                        height: "24px",
+                    }}>
+                    drag_handle
+                </Icon>
+                <table style={{ width: "100%" }}>
+                    <caption className='propertiesPanel'><h2>Properties Panel</h2></caption>
+                    <tbody>
+                        <tr>
                             <td>
-                                {PropertyValue(style)}
+                                <h4>Style List</h4>
+                                <hr />
                             </td>
                         </tr>
-                    ))}
-                    <tr>
-                        <td colSpan={2}>
-                            <h4>Attributes</h4>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Property</th>
-                        <th>Value</th>
-                    </tr>
-                    {Object.entries(attributes).map(([key, value]) => (
-                        <tr key={key}>
-                            <td>{key}</td>
-                            <td>
-
-                                <input
-                                    id={key + "-" + Math.floor(Math.random() * 10000)}
-                                    style={{ fontSize: "8pt" }}
-                                    type="text"
-                                    value={value}
-                                    onChange={(e) => handleAttributeChange(key, e.target.value)}
-                                />
+                        {Object.keys(styles).map((style) => (
+                            <tr key={style}>
+                                <td>
+                                    <div><b>{style}</b></div>
+                                    {PropertyValue(style)}
+                                </td>
+                            </tr>
+                        ))}
+                        <tr>
+                            <td className='propertiesPanel'>
+                                <h2>Attributes</h2>
                             </td>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div >
+                        <tr>
+                            <td>
+                                <h4>Attribute List</h4>
+                                <hr />
+                            </td>
+                        </tr>
+                        {Object.entries(attributes).map(([key, value]) => (
+                            <tr key={key}>
+                                <td>
+                                    <div><b>{key}</b></div>
+                                    <input
+                                        id={key + "-" + Math.floor(Math.random() * 10000)}
+                                        style={{ fontSize: "8pt", width: "100%" }}
+                                        type="text"
+                                        value={value}
+                                        label={key}
+                                        onChange={(e) => handleAttributeChange(key, e.target.value)}
+                                    />
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div >
+        </Draggable>
     );
 };
 export default StyledTable;
