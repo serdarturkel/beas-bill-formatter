@@ -3,15 +3,15 @@ import { Grid } from "@mui/material";
 import MDBox from "components/MDBox";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-
-const Certificates = () => {
+import CertificateStorePage from "./ui";
+const CertificateStore = () => {
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox mt={6} mb={3}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} lg={12}>
-            Certificates
+            <CertificateStorePage />
           </Grid>
         </Grid>
       </MDBox>
@@ -19,4 +19,4 @@ const Certificates = () => {
   );
 };
 
-export default Certificates;
+export default CertificateStore;

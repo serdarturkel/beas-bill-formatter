@@ -1,59 +1,64 @@
-import { Card, Icon, IconButton, Menu, MenuItem, TextField } from '@mui/material';
+import { Card, Icon, IconButton, TextField } from '@mui/material';
 import MDBox from 'components/MDBox';
-import MDInput from 'components/MDInput';
 import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { getData as getProjectData } from 'api/api';
-import MDTypography from 'components/MDTypography';
-const DataTableWithPagination = ({ cols, handleEdit, handleDelete, fetchUrl }) => {
-    const [data, setData] = useState([]);        // Tüm veri
-    const [currentPage, setCurrentPage] = useState(1); // Şu anki sayfa
-    const [itemsPerPage] = useState(10);         // Sayfa başına gösterilecek veri
-    const [loading, setLoading] = useState(true); // Yüklenme durumu
+const DataTableWithPagination = ({ cols, handleEdit, handleDelete, fetchUrl, handleView, searchKey }) => {
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(10);
+
 
     const deleteAction = async (item) => {
         await handleDelete(item);
         await fetchData();
     }
 
+    const viewAction = async (item) => {
+        await handleView(item);
+    }
+
     const fetchData = async () => {
         setLoading(true);
         const result = await getProjectData(fetchUrl + '?page=' + (currentPage - 1) + '&size=' + itemsPerPage + '&sort=createdDate'
-            + (searchValue && '&search=name=like=' + searchValue + ',description=like=' + searchValue));
+            + (searchValue && '&search=' + searchKey + '=like=' + searchValue + ',description=like=' + searchValue));
         setData(result);
         setLoading(false);
     };
 
-    // Backend'den veri çekme
     useEffect(() => {
         fetchData();
     }, [currentPage, itemsPerPage]);
 
-
-    // Mevcut sayfa için veriyi hesaplama
     const currentItems = data.content;
 
-    // Sayfa numarası değiştiğinde çağrılan fonksiyon
     const handlePageChange = (page) => setCurrentPage(page);
 
-    // DataTable Kolonları
     const columns = [
         {
-            name: 'Actions',  // Custom action column
+            name: 'Actions',
             cell: row => (
 
                 <MDBox display="flex">
-                    <IconButton onClick={() => handleEdit(row)} sx={{ fontWeight: "bold" }}>
-                        <Icon sx={{ fontWeight: "bold" }}>{"edit"}</Icon>
-                    </IconButton>
-                    <IconButton onClick={() => deleteAction(row)} sx={{ fontWeight: "bold" }}>
-                        <Icon sx={{ fontWeight: "bold" }}>{"delete"}</Icon>
-                    </IconButton>
+                    {handleEdit && (
+                        <IconButton onClick={() => handleEdit(row)} sx={{ fontWeight: "bold" }}>
+                            <Icon sx={{ fontWeight: "bold" }}>{"edit"}</Icon>
+                        </IconButton>
+                    )}
+                    {handleDelete && (
+                        <IconButton onClick={() => deleteAction(row)} sx={{ fontWeight: "bold" }}>
+                            <Icon sx={{ fontWeight: "bold" }}>{"delete"}</Icon>
+                        </IconButton>
+                    )}
+                    {handleView && (
+                        <IconButton onClick={() => viewAction(row)} sx={{ fontWeight: "bold" }}>
+                            <Icon sx={{ fontWeight: "bold" }}>{"visibility"}</Icon>
+                        </IconButton>
+                    )}
                 </MDBox >
             ),
-            ignoreRowClick: true,  // Satırın diğer alanlarını etkilememesi için
-            allowOverflow: true,
-            button: true,
+            ignoreRowClick: true
         },
         ...cols,
     ];
@@ -62,13 +67,10 @@ const DataTableWithPagination = ({ cols, handleEdit, handleDelete, fetchUrl }) =
     const allowedPattern = /^[A-Za-z0-9*]*$/;
     const handleInputChange = (e) => {
         const value = e.target.value;
-
-        // Eğer girilen veri regex'e uyuyorsa state'e set et
         if (allowedPattern.test(value)) {
             setSearchValue(value);
             setErrorMessage('');
         } else {
-            // Uygun olmayan giriş olduğunda hata mesajı göster
             setErrorMessage('Only characters A-Z, a-z, 0-9, and * are allowed.');
         }
     };
@@ -80,16 +82,16 @@ const DataTableWithPagination = ({ cols, handleEdit, handleDelete, fetchUrl }) =
 
     return (
         <Card>
-            <MDBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
+            <MDBox display="flex" justifyContent="space-between" alignItems="center" p={3} >
                 <MDBox>
                     <TextField
-                        label="Search here"
+                        label={searchKey}
                         value={searchValue}
                         onChange={(e) => handleInputChange(e)}
-                        onKeyDown={handleKeyDown} // Enter tuşunu burada kontrol ediyoruz
+                        onKeyDown={handleKeyDown}
                         variant='outlined'
-                        error={!!errorMessage} // Eğer hata varsa kırmızı çerçeve göster
-                        helperText={errorMessage} // Hata mesajını göster
+                        error={!!errorMessage}
+                        helperText={errorMessage}
                     />
                 </MDBox>
                 <MDBox color="text" px={2}>

@@ -5,11 +5,33 @@ import { any } from "prop-types";
 import React, { useImperativeHandle, useState } from "react";
 
 const Notification = React.forwardRef((props, ref) => {
-
+    const Types = {
+        WARNING: {
+            color: "warning",
+            icon: "warning",
+            title: "",
+            content: "",
+            info: "",
+        },
+        ERROR: {
+            color: "error",
+            icon: "error",
+            title: "",
+            content: "",
+            info: "",
+        },
+        SUCCESS: {
+            color: "success",
+            icon: "success",
+            title: "",
+            content: "",
+            info: "",
+        },
+    };
     useImperativeHandle(ref, () => ({
         show(opts) {
             setOptions(opts).then(show());
-        }
+        },
     }));
 
     const [infoSB, setInfoSB] = useState(false);
@@ -31,19 +53,17 @@ const Notification = React.forwardRef((props, ref) => {
         openInfoSB();
     }
     return (
-        <MDBox>
-            <MDSnackbar
-                color={snackOptions.color}
-                icon={snackOptions.icon}
-                title={snackOptions.title}
-                content={snackOptions.content}
-                dateTime={snackOptions.dateTime}
-                open={infoSB}
-                onClose={closeInfoSB}
-                close={closeInfoSB}
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-            />
-        </MDBox>
+        <MDSnackbar
+            color={snackOptions.color}
+            icon={snackOptions.icon}
+            title={snackOptions.title}
+            content={snackOptions.content}
+            dateTime={snackOptions.dateTime}
+            open={infoSB}
+            onClose={closeInfoSB}
+            close={closeInfoSB}
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        />
     );
 });
 

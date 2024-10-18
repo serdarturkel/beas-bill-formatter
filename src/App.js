@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // react-router components
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
@@ -36,10 +36,6 @@ import themeRTL from "assets/theme/theme-rtl";
 
 // Material Dashboard 2 React Dark Mode themes
 import themeDark from "assets/theme-dark";
-import themeDarkRTL from "assets/theme-dark/theme-rtl";
-
-// RTL plugins
-import { CacheProvider } from "@emotion/react";
 
 // Material Dashboard 2 React routes
 import routes from "routes";
@@ -53,6 +49,7 @@ import brandDark from "assets/images/beaslogo-landscape-black-no-bottom.webp"; /
 import { ConfirmProvider } from "material-ui-confirm";
 import { setGlobalErrorHandler } from "api/api";
 import ErrorModal from "components/Error";
+import Notification from "components/Notification";
 
 export default function App() {
   const brandName = "Bill Formatter";
@@ -68,17 +65,31 @@ export default function App() {
     darkMode,
   } = controller;
   const [onMouseEnter, setOnMouseEnter] = useState(false);
-  const [rtlCache] = useState(null);
   const { pathname } = useLocation();
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const notificationElement = useRef();
+
+  const showSnack = async (opts) => {
+    new Promise((resolve) => {
+      if (notificationElement.current) {
+        notificationElement.current.show(opts);
+        resolve(opts);
+      }
+    });
+  };
 
   useEffect(() => {
-    // Interceptor'dan gelen hata mesajını yönetmek için global error handler set edilir
-    setGlobalErrorHandler((message) => {
-      setErrorMessage(message);
-      setModalOpen(true);
+    setGlobalErrorHandler((e) => {
+      const opts = {
+        color: "error",
+        icon: "error",
+        title: e.data.response.reason,
+        content: e.data.response.message,
+        info: e.data.response.errorCode,
+      };
+      showSnack(opts);
     });
   }, []);
 
@@ -158,6 +169,7 @@ export default function App() {
   return (
 
     <ThemeProvider theme={darkMode ? themeDark : theme}>
+      <Notification ref={notificationElement} />
       <ErrorModal
         open={isModalOpen}
         handleClose={handleCloseModal}

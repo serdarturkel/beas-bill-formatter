@@ -57,7 +57,6 @@ const A4Page = React.forwardRef(({ setSelectedElement }) => {
         handlePrint(event);
     };
     const deleteItem = (compId) => {
-        console.log("Delete Event Id:" + compId);
         const updatedItems = components.filter((item) => item.id !== compId);
         setComponents(updatedItems);
     }

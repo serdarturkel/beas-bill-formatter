@@ -1,7 +1,6 @@
 import React from 'react';
 import { Modal, Box, Typography, Button } from '@mui/material';
 
-// Modal stilini tanımla
 const style = {
   position: 'absolute',
   top: '50%',

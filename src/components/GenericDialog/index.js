@@ -3,15 +3,17 @@ import MDBox from "components/MDBox";
 import React, { useState } from "react";
 import styled from "styled-components";
 
-const ProjectDialog = React.forwardRef((props, ref) => {
+const GenericDialog = React.forwardRef((props, ref) => {
   const { submitAction, body } = props;
   const [item, setItem] = useState(null);
   const [dialog, show] = useState(false);
+  const close = () => show(false);
+
   const [dialogOptions, setDialogOptions] = useState({
     submitButtonText: "Submit",
     cancelButtonText: "Cancel",
-    title: "Project Dialog",
-    content: "Project Dialog Content",
+    title: "Generic Dialog",
+    content: "Generic Dialog Content",
   });
 
   React.useImperativeHandle(ref, () => ({
@@ -20,12 +22,6 @@ const ProjectDialog = React.forwardRef((props, ref) => {
     },
     closeDialog: close,
   }));
-
-
-
-
-  const close = () => show(false);
-
 
   const options = async (opts, item) => {
     return new Promise((resolve) => {
@@ -43,8 +39,8 @@ const ProjectDialog = React.forwardRef((props, ref) => {
     textAlign: 'center',
     color: theme.palette.text.secondary,
   }));
-  return (
 
+  return (
     <React.Fragment>
       <Dialog
         open={dialog}
@@ -53,9 +49,11 @@ const ProjectDialog = React.forwardRef((props, ref) => {
           component: "form",
           onSubmit: (event) => {
             event.preventDefault();
-            const formData = new FormData(event.currentTarget);
-            const formJson = Object.fromEntries(formData.entries());
-            submitAction(formJson);
+            if (submitAction) {
+              const formData = new FormData(event.currentTarget);
+              const formJson = Object.fromEntries(formData.entries());
+              submitAction(formJson);
+            }
             close();
           },
         }}
@@ -76,5 +74,5 @@ const ProjectDialog = React.forwardRef((props, ref) => {
   );
 });
 
-export default ProjectDialog;
+export default GenericDialog;
 

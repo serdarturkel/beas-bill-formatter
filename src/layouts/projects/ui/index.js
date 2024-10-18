@@ -43,11 +43,7 @@ function Projects() {
           showSnack(o);
         });
     }).catch((e) => {
-      ProjectModel
-        .message(ProjectModel.ERROR, "Create Request", "Create request is failed!", Date.now)
-        .then((o) => {
-          showSnack(o);
-        });
+      console.error(e);
     });
   };
 
@@ -64,15 +60,10 @@ function Projects() {
           showSnack(o);
         });
     }).catch((e) => {
-      ProjectModel
-        .message(ProjectModel.ERROR, "Edit Request", "Edit request is failed!", Date.now)
-        .then((o) => {
-          showSnack(o);
-        });
+      console.error(e);
     });
   };
 
-  // Silme işlemi
   const handleDelete = async (item) => {
     return new Promise((resolve) => {
       confirm({ description: `This will permanently delete ${item.id}.` })
@@ -85,27 +76,17 @@ function Projects() {
             .message(ProjectModel.SUCCESS, "Delete Request", "Delete request is completed!", Date.now)
             .then((opts) => showSnack(opts));
         })
-        .catch(() => {
-          ProjectModel
-            .message(ProjectModel.WARNING, "Delete Request", "Delete request is failed!", Date.now)
-            .then((opts) => showSnack(opts));
+        .catch((e) => {
+          console.error(e);
         });
     });
   };
 
-  // Düzenleme işlemi
   const handleEdit = async (item) => {
 
     if (editProjectDialogRef.current) {
       editProjectDialogRef.current.showDialog(ProjectModel.editDialogOpts, item);
     }
-    /*
-    ProjectModel
-      .message(ProjectModel.WARNING, "Edit Request", "Edit request is failed!", Date.now)
-      .then((opts) => {
-        showSnack(opts);
-      });
-    */
   };
 
   const showSnack = async (opts) => {
@@ -138,6 +119,7 @@ function Projects() {
             handleEdit={handleEdit}
             handleDelete={handleDelete}
             fetchUrl={"/project/read"}
+            searchKey={"name"}
           />
         </Card>
       </MDBox>

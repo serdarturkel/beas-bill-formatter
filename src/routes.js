@@ -48,9 +48,10 @@ import SignUp from "layouts/authentication/sign-up";
 import Icon from "@mui/material/Icon";
 import Tasks from "layouts/tasks/Tasks";
 import Templates from "layouts/templates/Templates";
-import Certificates from "layouts/certificates/Certificates";
+import Certificates from "layouts/certificates/index";
 import Projects from "layouts/projects";
 import Settings from "layouts/settings/Settings";
+import CertificateStore from "layouts/certificateStore";
 
 const routes = [
   {
@@ -68,6 +69,14 @@ const routes = [
     name: "Projects",
     icon: <Icon fontSize="small">account_tree</Icon>,
     component: <Projects />,
+  },
+  {
+    type: "collapse",
+    key: "certificateStore",
+    route: "/certificateStore",
+    name: "Certificate Store",
+    icon: <Icon fontSize="small">warehouse</Icon>,
+    component: <CertificateStore />,
   },
   {
     type: "collapse",
