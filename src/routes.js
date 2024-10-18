@@ -52,6 +52,7 @@ import Certificates from "layouts/certificates/index";
 import Projects from "layouts/projects";
 import Settings from "layouts/settings/Settings";
 import CertificateStore from "layouts/certificateStore";
+import Published from "layouts/published";
 
 const routes = [
   {
@@ -93,6 +94,14 @@ const routes = [
     name: "Templates",
     icon: <Icon fontSize="small">widgets</Icon>,
     component: <Templates />,
+  },
+  {
+    type: "collapse",
+    key: "published",
+    route: "/published",
+    name: "Published",
+    icon: <Icon fontSize="small">backup_table</Icon>,
+    component: <Published />,
   },
   {
     type: "collapse",

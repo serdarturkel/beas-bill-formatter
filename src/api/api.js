@@ -36,7 +36,7 @@ api.interceptors.response.use(
         let message = 'Unexpected exception occured!';
         if (error.response) {
             if (errorHandler != null) {
-                errorHandler(error.response);
+                errorHandler(error.response ? error.response : message);
             }
             return Promise.reject(error.response);
         } else if (error.request) {

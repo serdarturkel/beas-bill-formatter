@@ -82,13 +82,24 @@ export default function App() {
 
   useEffect(() => {
     setGlobalErrorHandler((e) => {
+      console.log("Handle error:"+e);
       const opts = {
         color: "error",
         icon: "error",
-        title: e.data.response.reason,
-        content: e.data.response.message,
-        info: e.data.response.errorCode,
+        title: "Unexpected Error",
+        content: "Unexpected Error",
+        info: "Unexpected Error",
       };
+      if (e.data) {
+        opts.title = e.data.response.reason;
+        opts.content = e.data.response.message;
+        opts.info = e.data.response.errorCode;
+      } else {
+        opts.title = "Unexpected Error";
+        opts.content = e;
+        opts.info = "Unexpected Error";
+      }
+
       showSnack(opts);
     });
   }, []);
