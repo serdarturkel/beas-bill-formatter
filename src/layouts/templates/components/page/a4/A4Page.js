@@ -9,7 +9,7 @@ import { useReactToPrint } from 'react-to-print';
 import ImageUpload from '../image/ImageUpload';
 
 
-const A4Page = React.forwardRef(({ setSelectedElement }) => {
+const A4Page = React.forwardRef(({setSelectedElement},props) => {
     const [selectedOrigin, setSelectedOrigin] = useState(null);
     const [components, setComponents] = useState([]);
     const componentRef = useRef();
@@ -72,7 +72,7 @@ const A4Page = React.forwardRef(({ setSelectedElement }) => {
 
     return (
         <div>
-            <div class="page-container">
+            <div className="page-container">
                 <Button className='primary' onClick={savePage}>
                     <Icon fontSize="small" color="inherit">
                         save
@@ -100,9 +100,9 @@ const A4Page = React.forwardRef(({ setSelectedElement }) => {
                     Print
                 </Button>
             </div>
-            <div class="page-container">
-                <div class="page" page-size="A4" layout="portrait">
-                    <div id='pageContent' class="page-content" ref={componentRef}>
+            <div className="page-container">
+                <div className="page" page-size="A4" layout="portrait">
+                    <div id='pageContent' className="page-content" ref={componentRef}>
                         {
                             components.map((comp) => {
                                 const style = { zIndex: comp.zIndex };

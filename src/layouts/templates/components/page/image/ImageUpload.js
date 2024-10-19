@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Draggable from 'react-draggable';
 import { ResizableBox } from 'react-resizable';
 import '../style/General.css';
-const ImageUpload = ({ deleteEvent, setSelectedElement, setSelectedOrigin, id }) => {
+const ImageUpload = React.forwardRef(({ deleteEvent, setSelectedElement, setSelectedOrigin, id },props) => {
     const handleDeleteEvent = (e) => {
         deleteEvent(id);
     };
@@ -121,6 +121,6 @@ const ImageUpload = ({ deleteEvent, setSelectedElement, setSelectedOrigin, id })
             </ResizableBox>
         </Draggable>
     )
-};
+});
 
 export default ImageUpload;

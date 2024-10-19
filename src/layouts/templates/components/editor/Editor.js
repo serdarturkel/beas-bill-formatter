@@ -10,7 +10,7 @@ import Table from '@editorjs/table'
 import SimpleImage from '@editorjs/simple-image';
 import "./Editor.css";
 
-const Editor = ({ onClick, id }) => {
+const Editor = React.forwardRef(({ onClick, id }, props) => {
 
     const editorInstance = useRef(null);
 
@@ -112,7 +112,7 @@ const Editor = ({ onClick, id }) => {
                     const totalBlocks = editorInstance.current.blocks.getBlocksCount();
                     for (let i = 0; i < totalBlocks; i++) {
                         const block = editorInstance.current.blocks.getBlockByIndex(i);
-                        if(block.stretch){
+                        if (block.stretch) {
                             block.stretch(true);
                         }
                     }
@@ -134,6 +134,6 @@ const Editor = ({ onClick, id }) => {
     return (
         <div onClick={onClick} id={"editorjs-" + id} />
     );
-};
+});
 
 export default Editor;

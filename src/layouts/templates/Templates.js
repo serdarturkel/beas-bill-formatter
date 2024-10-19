@@ -25,7 +25,7 @@ const Templates = () => {
             <StyledTable selectedElement={selectedElement} onStyleChange={handleStyleChange} />
           )}
         </Grid>
-        <Grid item xs={12} md={10} spacing={1}>
+        <Grid item xs={12} md={10}>
           <MDBox>
             <A4Page setSelectedElement={setSelectedElement} />
           </MDBox>

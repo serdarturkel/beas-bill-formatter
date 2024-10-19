@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Editor from "../../editor/Editor";
 import { Icon } from "@mui/material";
 import Draggable from "react-draggable";
 import { ResizableBox } from "react-resizable";
 import '../style/General.css';
-const DesignComponent = ({ deleteEvent, setSelectedElement, setSelectedOrigin, id }) => {
+const DesignComponent = React.forwardRef(({ deleteEvent, setSelectedElement, setSelectedOrigin, id }, props) => {
     const handleElementClick = (e) => {
         setSelectedElement(e.target);
         setSelectedOrigin(id);
@@ -78,6 +78,6 @@ const DesignComponent = ({ deleteEvent, setSelectedElement, setSelectedOrigin, i
             </ResizableBox>
         </Draggable>
     )
-};
+});
 
 export default DesignComponent;

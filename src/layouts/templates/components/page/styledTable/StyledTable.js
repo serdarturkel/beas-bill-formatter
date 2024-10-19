@@ -5,7 +5,7 @@ import Draggable from 'react-draggable';
 import '../style/General.css';
 
 // Stil tablosu komponenti
-const StyledTable = ({ selectedElement, onStyleChange }) => {
+const StyledTable = React.forwardRef(({ selectedElement, onStyleChange }, props) => {
     const [styles, setStyles] = useState({});
     const [attributes, setAttributes] = useState({});
 
@@ -265,5 +265,5 @@ const StyledTable = ({ selectedElement, onStyleChange }) => {
             </div >
         </Draggable>
     );
-};
+});
 export default StyledTable;
