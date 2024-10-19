@@ -37,25 +37,23 @@ Coded by www.creative-tim.com
 
 // Material Dashboard 2 React layouts
 import Dashboard from "layouts/dashboard";
-import Tables from "layouts/tables";
 import Billing from "layouts/billing";
-import Notifications from "layouts/notifications";
 import Profile from "layouts/profile";
-import SignIn from "layouts/authentication/sign-in";
-import SignUp from "layouts/authentication/sign-up";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
 import Tasks from "layouts/tasks/Tasks";
-import Templates from "layouts/templates/Templates";
 import Certificates from "layouts/certificates/index";
 import Projects from "layouts/projects";
 import Settings from "layouts/settings/Settings";
 import CertificateStore from "layouts/certificateStore";
 import Published from "layouts/published";
+import InvoiceTemplate from "layouts/invoiceTemplate";
+import NewTemplate from "layouts/templates";
 
 const routes = [
   {
+    menu: true,
     type: "collapse",
     name: "Dashboard",
     key: "dashboard",
@@ -64,6 +62,7 @@ const routes = [
     component: <Dashboard />,
   },
   {
+    menu: true,
     type: "collapse",
     key: "projects",
     route: "/projects",
@@ -72,6 +71,7 @@ const routes = [
     component: <Projects />,
   },
   {
+    menu: true,
     type: "collapse",
     key: "certificateStore",
     route: "/certificateStore",
@@ -80,6 +80,7 @@ const routes = [
     component: <CertificateStore />,
   },
   {
+    menu: true,
     type: "collapse",
     key: "certificates",
     route: "/certificates",
@@ -88,14 +89,25 @@ const routes = [
     component: <Certificates />,
   },
   {
+    menu: true,
     type: "collapse",
-    key: "templates",
-    route: "/templates",
-    name: "Templates",
+    key: "invoiceTemplates",
+    route: "/invoiceTemplates",
+    name: "Invoice Templates",
     icon: <Icon fontSize="small">widgets</Icon>,
-    component: <Templates />,
+    component: <InvoiceTemplate />,
   },
   {
+    menu: false,
+    type: "collapse",
+    key: "template",
+    route: "/newTemplate/:id",
+    name: "Create Invoice Templates",
+    icon: <Icon fontSize="small">note_add</Icon>,
+    component: <NewTemplate />,
+  },
+  {
+    menu: true,
     type: "collapse",
     key: "published",
     route: "/published",
@@ -104,6 +116,7 @@ const routes = [
     component: <Published />,
   },
   {
+    menu: false,
     type: "collapse",
     key: "tasks",
     route: "/tasks",
@@ -112,6 +125,7 @@ const routes = [
     component: <Tasks />,
   },
   {
+    menu: false,
     type: "collapse",
     name: "Billing",
     key: "billing",
@@ -120,6 +134,7 @@ const routes = [
     component: <Billing />,
   },
   {
+    menu: false,
     type: "collapse",
     name: "Profile",
     key: "profile",
@@ -128,6 +143,7 @@ const routes = [
     component: <Profile />,
   },
   {
+    menu: false,
     type: "collapse",
     key: "settings",
     route: "/settings",

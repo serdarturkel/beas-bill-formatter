@@ -60,6 +60,7 @@
     "react-to-print": "^3.0.1",
     "styled-components": "^6.1.13",
     "stylis": "4.1.4",
+    "uuid": "^10.0.0",
     "yup": "1.1.1"
   },
   "scripts": {

@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 
-const PublishedCertificateModel = {
+const PublishedInvoiceTemplateModel = {
     cols: [
         {
             name: 'ID',
@@ -40,6 +40,11 @@ const PublishedCertificateModel = {
         {
             name: 'File Name',
             selector: row => row.fileName,
+            sortable: true,
+        },
+        {
+            name: 'Created By',
+            selector: row => row.createdBy,
             sortable: true,
         },
         {
@@ -106,4 +111,4 @@ const PublishedCertificateModel = {
         });
     },
 };
-export default PublishedCertificateModel;
+export default PublishedInvoiceTemplateModel;

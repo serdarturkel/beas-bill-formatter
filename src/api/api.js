@@ -39,9 +39,9 @@ api.interceptors.response.use(
                 errorHandler(error.response ? error.response : message);
             }
             return Promise.reject(error.response);
-        } else if (error.request) {
-            message = 'No response received from server.';
-        } else {
+        }  else if (error.request) {
+            message = 'No response received from server. Please check your network connection.';
+        }  else {
             message = 'Request setup error: ' + error.message;
         }
 
@@ -58,7 +58,7 @@ export const getData = async (endpoint) => {
         const response = await api.get(endpoint);
         return response.data;
     } catch (error) {
-        console.error('GET error:', error);
+        console.error('GET error: %s', error);
         throw error;
     }
 };
@@ -68,7 +68,7 @@ export const postData = async (endpoint, data) => {
         const response = await api.post(endpoint, data);
         return response.data;
     } catch (error) {
-        console.error('POST error:', error);
+        console.error('POST error: %s', error);
         throw error;
     }
 };
@@ -78,7 +78,7 @@ export const putData = async (endpoint, data) => {
         const response = await api.put(endpoint, data);
         return response.data;
     } catch (error) {
-        console.error('PUT error:', error);
+        console.error('PUT error: %s', error);
         throw error;
     }
 };
@@ -88,7 +88,7 @@ export const patchData = async (endpoint, data) => {
         const response = await api.patch(endpoint, data);
         return response.data;
     } catch (error) {
-        console.error('PATCH error:', error);
+        console.error('PATCH error: %s', error);
         throw error;
     }
 };
@@ -98,7 +98,7 @@ export const deleteData = async (endpoint) => {
         const response = await api.delete(endpoint);
         return response.data;
     } catch (error) {
-        console.error('DELETE error:', error);
+        console.error('DELETE error: %s', error);
         throw error;
     }
 };

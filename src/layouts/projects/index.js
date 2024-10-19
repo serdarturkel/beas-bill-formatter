@@ -1,8 +1,8 @@
 import React from "react";
 import { Grid } from "@mui/material";
 import MDBox from "components/MDBox";
-import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import DashboardLayout from "widgets/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "widgets/Navbars/DashboardNavbar";
 import ProjectsPage from "layouts/projects/ui";
 const Projects = () => {
   return (
