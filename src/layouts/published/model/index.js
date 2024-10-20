@@ -1,3 +1,4 @@
+import { Icon } from "@mui/material";
 import { format } from "date-fns";
 
 const PublishedInvoiceTemplateModel = {
@@ -18,18 +19,13 @@ const PublishedInvoiceTemplateModel = {
             sortable: true,
         },
         {
-            name: 'HTML',
-            selector: row => row.html,
-            sortable: true,
-        },
-        {
             name: 'Version',
             selector: row => row.version,
             sortable: true,
         },
         {
             name: 'Status',
-            selector: row => row.status,
+            selector: row => <Icon fontSize="medium" color={row.status=='ACTIVE'?'success':'primary'}>circle</Icon>,
             sortable: true,
         },
         {

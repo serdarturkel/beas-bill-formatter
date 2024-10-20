@@ -2,7 +2,7 @@
 import "./A4Page.css";
 import "react-resizable/css/styles.css";
 
-import { Icon, Button, Skeleton, Avatar, TextField } from '@mui/material';
+import { Icon, Button, Skeleton, Avatar, TextField, Switch } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import DesignComponent from '../design/DesignElement';
 import { useReactToPrint } from 'react-to-print';
@@ -15,6 +15,8 @@ import MDSnackbarOptions from "components/MDSnackbar/options";
 const A4Page = React.forwardRef(({ selectEvent }) => {
     const [selectedOrigin, originEvent] = useState();
     const navigate = useNavigate();
+    const [status, setStatus] = useState(false);
+    const statusRef = useRef();
 
     const [components, setComponents] = useState([]);
     const componentRefs = useRef([]);
@@ -32,6 +34,10 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
         setComponents(prevComponents => prevComponents.map(comp => ({ ...comp, zIndex: comp.id === clickedId ? 1 : 0 })));
     };
 
+    const statusChange = (event) => {
+        setStatus(event.target.checked);
+    };
+
     useEffect(() => {
         changeZIndex(selectedOrigin);
     }, [selectedOrigin]);
@@ -43,6 +49,7 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
             setTemplateName(result.templateName);
             setData(result);
             recreateComponenet(result);
+            setStatus(result.status == "ACTIVE");
         } catch (e) {
             console.log(e);
             setData(null);
@@ -84,7 +91,7 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
     }
     const backToThePage = async (item) => {
         navigate('/invoiceTemplates');
-      };
+    };
     const print = (event) => {
         const printElement = pageContentRef.current;
         if (printElement) {
@@ -138,7 +145,8 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
                 "id": id,
                 "html": pageContentRef.current.parentElement.outerHTML,
                 "designData": JSON.stringify(contents),
-                "templateName": templateName
+                "templateName": templateName,
+                "status": status ? 'ACTIVE' : 'DRAFT',
             }).then((obj) => {
                 MDSnackbarOptions
                     .message(MDSnackbarOptions.SUCCESS, "Update Request", "Update request is completed.", Date.now)
@@ -155,6 +163,7 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
                 "html": pageContentRef.current.parentElement.outerHTML,
                 "templateName": templateName,
                 "designData": JSON.stringify(contents),
+                "status": status === true ? 'ACTIVE' : 'DRAFT',
             }).then((obj) => {
                 setData(obj);
                 MDSnackbarOptions
@@ -231,6 +240,7 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
                     </Icon>
                     Print
                 </Button>
+                <Switch checked={status} onChange={statusChange} ref={statusRef} />
                 <Button className='primary' onClick={backToThePage}>
                     <Icon fontSize="small" color="inherit">
                         arrow_back

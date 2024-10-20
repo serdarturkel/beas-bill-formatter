@@ -1,4 +1,7 @@
+import { Icon, Switch } from "@mui/material";
+import { patchData } from "api/api";
 import { format } from "date-fns";
+
 
 const InvoiceTemplateModel = {
     cols: [
@@ -24,7 +27,7 @@ const InvoiceTemplateModel = {
         },
         {
             name: 'Status',
-            selector: row => row.status,
+            selector: row => <Icon fontSize="medium" color={row.status=='ACTIVE'?'success':'primary'}>circle</Icon>,
             sortable: true,
         },
         {
@@ -100,5 +103,6 @@ const InvoiceTemplateModel = {
             resolve(type);
         });
     },
+
 };
 export default InvoiceTemplateModel;

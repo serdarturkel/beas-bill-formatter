@@ -61,12 +61,16 @@ function InvoiceTemplatePage() {
 
   return (
     <MDBox>
+      <Notification ref={notificationElement} />
       <MDBox>
-        <Notification ref={notificationElement} />
         <MDBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
           <MDButton variant="outlined" color={"dark"} circular onClick={handleCreate}>
             <Icon sx={{ fontWeight: "bold" }}>{"add"}</Icon>
             <span>Create Template</span>
+          </MDButton>
+          <MDButton variant="outlined" color={"primary"} circular onClick={handleCreate}>
+            <Icon sx={{ fontWeight: "bold" }}>{"upload"}</Icon>
+            <span>Upload Template</span>
           </MDButton>
         </MDBox>
       </MDBox>

@@ -59,6 +59,17 @@ const CreateBody = (item) => {
                         onChange={(event, value) => selectTemplate(event, value)}
                     />
                 )}
+                <TextField
+                    required
+                    margin="dense"
+                    id="templateId"
+                    name="templateId"
+                    type="text"
+                    fullWidth
+                    variant="standard"
+                    value={template?.id}
+                    defaultValue={template?.id}
+                />
                 {certificateLoading ? (
                     <p>Loading...</p>
                 ) : (
