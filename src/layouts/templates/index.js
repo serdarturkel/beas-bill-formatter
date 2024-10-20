@@ -9,13 +9,12 @@ import StyledTable from "./components/page/styledTable/StyledTable";
 
 
 const NewTemplate = () => {
-  const [selectedElement, setSelectedElement] = useState(null);
+  const [selectedElement, setSelectedElement] = useState();
   const handleStyleChange = (property, value) => {
     if (selectedElement) {
       selectedElement.style[property] = value;
     }
   };
-
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -27,7 +26,7 @@ const NewTemplate = () => {
         </Grid>
         <Grid item xs={12} md={10}>
           <MDBox>
-            <A4Page setSelectedElement={setSelectedElement} />
+            <A4Page selectEvent={setSelectedElement} />
           </MDBox>
         </Grid>
 

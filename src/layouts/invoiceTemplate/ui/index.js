@@ -51,11 +51,10 @@ function InvoiceTemplatePage() {
   };
 
   const handleView = async (item) => {
-    console.log("TODO: it will redirect to a4 page");
+    navigate('/newTemplate/' + item.id);
   };
 
   const handleCreate = async (item) => {
-    console.log("TODO: it will redirect to a4 page");
     navigate('/newTemplate/' + uuidv4());
   };
 

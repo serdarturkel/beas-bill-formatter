@@ -32,7 +32,7 @@ function PublishedInvoiceTemplatePage() {
   };
 
   const createSubmitAction = (formJson) => {
-    const publishTemplate = getData("/publishedInvoiceTemplate/generate/" + formJson.templateId + "/" + formJson.certificateId, {}).then((obj) => {
+    const publishTemplate = getData("/publishedInvoiceTemplate/publish/" + formJson.templateId + "/" + formJson.certificateId, {}).then((obj) => {
       DataModel
         .message(DataModel.SUCCESS, "Create Request", "Create request is completed.", Date.now)
         .then((o) => {

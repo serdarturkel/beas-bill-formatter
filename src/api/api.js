@@ -40,6 +40,7 @@ api.interceptors.response.use(
             }
             return Promise.reject(error.response);
         }  else if (error.request) {
+
             message = 'No response received from server. Please check your network connection.';
         }  else {
             message = 'Request setup error: ' + error.message;

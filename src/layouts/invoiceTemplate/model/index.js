@@ -13,13 +13,13 @@ const InvoiceTemplateModel = {
             sortable: true,
         },
         {
-            name: 'HTML',
-            selector: row => row.html,
+            name: 'Version',
+            selector: row => row.version,
             sortable: true,
         },
         {
-            name: 'Version',
-            selector: row => row.version,
+            name: 'Uploaded',
+            selector: row => row.uploaded,
             sortable: true,
         },
         {

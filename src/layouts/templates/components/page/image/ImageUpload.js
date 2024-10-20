@@ -4,12 +4,37 @@ import styled from 'styled-components';
 import Draggable from 'react-draggable';
 import { ResizableBox } from 'react-resizable';
 import '../style/General.css';
-const ImageUpload = React.forwardRef(({ deleteEvent, setSelectedElement, setSelectedOrigin, id },props) => {
+const ImageUpload = React.forwardRef(({ id, content, deleteEvent, selectEvent, originEvent, position }, ref) => {
+    const type = "image";
+    const [imageData, setImageData] = useState(null);
+    const rndRef = useRef(null);
+    const contentRef = useRef(null);
+    const [imageDimension, setDimensions] = useState({ width: 150, height: 60 });
+    const [isResizing, setIsResizing] = useState(false); // Resizable durumu kontrolü
+
+    React.useImperativeHandle(ref, () => ({
+        getContent: () => {
+            return { image: imageData };
+        },
+        setContent: (data) => {
+            setImageData(data);
+        },
+        getId: () => {
+            return id;
+        },
+        getType: () => {
+            return type;
+        },
+        getBoundingClientRect: () => {
+            const { x, y } = rndRef.current.state;
+            return { x, y };
+        }
+    }));
+
     const handleDeleteEvent = (e) => {
         deleteEvent(id);
     };
-    const [imageData, setImageData] = useState(null);
-    const rndRef = useRef(null);
+
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -21,8 +46,8 @@ const ImageUpload = React.forwardRef(({ deleteEvent, setSelectedElement, setSele
         }
     };
     const handleElementClick = (e) => {
-        setSelectedElement(e.target);
-        setSelectedOrigin(id);
+        selectEvent(e.target);
+        originEvent(id);
     };
     const VisuallyHiddenInput = styled('input')({
         clip: 'rect(0 0 0 0)',
@@ -35,9 +60,7 @@ const ImageUpload = React.forwardRef(({ deleteEvent, setSelectedElement, setSele
         whiteSpace: 'nowrap',
         width: 1,
     });
-    const contentRef = useRef(null);
-    const [imageDimension, setDimensions] = useState({ width: 150, height: 60 });
-    const [isResizing, setIsResizing] = useState(false); // Resizable durumu kontrolü
+
     useEffect(() => {
         if (contentRef.current) {
             const { scrollHeight, scrollWidth } = contentRef.current;
@@ -45,13 +68,24 @@ const ImageUpload = React.forwardRef(({ deleteEvent, setSelectedElement, setSele
                 width: Math.max(scrollWidth + 20, 200), // Min width 200
                 height: Math.max(scrollHeight + 20, 200), // Min height 200
             });
+            ref.current = {
+                getContent() {
+                    return imageData;
+                },
+                setContent(data) {
+                    setImageData(data);
+                }
+            };
         }
+        if (content)
+            setImageData(content);
     }, [imageData]);
     return (
         <Draggable ref={rndRef}
             handle=".drag-handle"
             disabled={isResizing}
             bounds="parent"
+            defaultPosition={position}
         >
             <ResizableBox
                 width={imageDimension.width}
@@ -62,8 +96,8 @@ const ImageUpload = React.forwardRef(({ deleteEvent, setSelectedElement, setSele
                 onResizeStart={() => setIsResizing(true)} // Boyutlandırma başlıyor
                 onResizeStop={() => setIsResizing(false)} // Boyutlandırma bitiyor
             >
-                <div className='draggableContent'>
-                    <Icon fontSize="small" color="inherit"
+                <div className='draggableContent' id={id + "-image"}>
+                    <Icon fontSize="small"
                         color={"info"}
                         className="drag-handle"
                         style={{
@@ -79,7 +113,7 @@ const ImageUpload = React.forwardRef(({ deleteEvent, setSelectedElement, setSele
                         }}>
                         drag_handle
                     </Icon>
-                    <Icon onClick={handleDeleteEvent} fontSize="small" color="inherit"
+                    <Icon onClick={handleDeleteEvent} fontSize="small"
                         color={"info"}
                         className="drag-handle"
                         style={{

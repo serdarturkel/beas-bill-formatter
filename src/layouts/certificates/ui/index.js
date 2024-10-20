@@ -12,7 +12,7 @@ import MDButton from "components/MDButton";
 import { useConfirm } from "material-ui-confirm";
 import DataTableWithPagination from "components/DataTable";
 import GenericDialog from "components/GenericDialog";
-import { postData as saveProject, deleteData as deleteProject, patchData as updateProject } from "api/api";
+import { postData , deleteData } from "api/api";
 import Notification from "components/Notification";
 import DataModel from "../model";
 import createBody from "./components/CreateDialogBody";
@@ -32,7 +32,7 @@ function CertificatesPage() {
   };
 
   const createSubmitAction = (formJson) => {
-    const createdProject = saveProject("/certificate/generate", {
+    const createdProject = postData("/certificate/generate", {
       "commonName": formJson.commonName,
       "organization": formJson.organization,
       "organizationalUnit": formJson.organizationalUnit,
@@ -53,32 +53,11 @@ function CertificatesPage() {
     });
   };
 
-  const editSubmitAction = (formJson) => {
-    const createdProject = updateProject("/certificate/update", {
-      "commonName": formJson.commonName,
-      "organization": formJson.organization,
-      "organizationalUnit": formJson.organizationalUnit,
-      "country": formJson.country,
-      "locality": formJson.locality,
-      "validityDays": formJson.validityDays,
-      "alias": formJson.alias,
-      "certificateStoreId": formJson.certificateStoreId
-    }).then((obj) => {
-      DataModel
-        .message(DataModel.SUCCESS, "Edit Request", "Edit request is completed.", Date.now)
-        .then((o) => {
-          showSnack(o);
-        });
-    }).catch((e) => {
-      console.error(e);
-    });
-  };
-
   const handleDelete = async (item) => {
     return new Promise((resolve) => {
       confirm({ description: `This will permanently delete ${item.id}.` })
         .then(() => {
-          deleteProject("/certificate/delete/" + item.id);
+          deleteData("/certificate/delete/" + item.id);
           resolve();
         })
         .then(() => {

@@ -33,7 +33,7 @@ import MDSnackbarIconRoot from "components/MDSnackbar/MDSnackbarIconRoot";
 // Material Dashboard 2 React context
 import { useMaterialUIController } from "context";
 
-function MDSnackbar({ color, icon, title, content, close, bgWhite, ...rest }) {
+function MDSnackbar({ color, icon, title, reason, content, close, bgWhite, ...rest }) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
 
@@ -138,7 +138,9 @@ function MDSnackbar({ color, icon, title, content, close, bgWhite, ...rest }) {
             },
           }}
         >
-          {content}
+          Reason: {reason}
+          <br/>
+          Message: {content}
         </MDBox>
       </MDBox>
     </Snackbar>

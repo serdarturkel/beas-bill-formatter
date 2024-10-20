@@ -4,20 +4,44 @@ import { Icon } from "@mui/material";
 import Draggable from "react-draggable";
 import { ResizableBox } from "react-resizable";
 import '../style/General.css';
-const DesignComponent = React.forwardRef(({ deleteEvent, setSelectedElement, setSelectedOrigin, id }, props) => {
+
+const DesignComponent = React.forwardRef(({ id, deleteEvent, selectEvent, originEvent, content, position }, ref) => {
+    const rndRef = useRef(null)
+    const contentRef = useRef(null);
+    const [dimensions, setDimensions] = useState({ width: 150, height: 60 });
+    const [isResizing, setIsResizing] = useState(false);
+    const type = "design";
+
+    React.useImperativeHandle(ref, () => ({
+        getContent: () => {
+            return contentRef.current.getContent();
+        },
+        setContent: (data) => {
+            contentRef.current.setContent(data);
+        },
+        getId: () => {
+            return id;
+        },
+        getType: () => {
+            return type;
+        },
+        getBoundingClientRect: () => {
+            const { x, y } = rndRef.current.state;
+            return { x, y };
+        }
+    }));
+
     const handleElementClick = (e) => {
-        setSelectedElement(e.target);
-        setSelectedOrigin(id);
+        selectEvent(e.target);
+        originEvent(id);
     };
+
     const handleDeleteEvent = (e) => {
         deleteEvent(id);
     };
 
 
-    const rndRef = useRef(null)
-    const contentRef = useRef(null);
-    const [dimensions, setDimensions] = useState({ width: 150, height: 60 });
-    const [isResizing, setIsResizing] = useState(false); // Resizable durumu kontrolü
+
     useEffect(() => {
         if (contentRef.current) {
             const { scrollHeight, scrollWidth } = contentRef.current;
@@ -26,12 +50,21 @@ const DesignComponent = React.forwardRef(({ deleteEvent, setSelectedElement, set
                 height: Math.max(scrollHeight + 20, 200), // Min height 200
             });
         }
-    }, [contentRef]);
+    }, [contentRef, ref]);
+
+    useEffect(() => {
+        if (content) {
+            console.log("Default Content:" + JSON.stringify(content));
+            contentRef.current.setContent(content);
+        }
+    }, [content]);
+
     return (
         <Draggable ref={rndRef}
             handle=".drag-handle" // Sadece taşıma ikonu üzerinden taşımayı aktif et
             disabled={isResizing}  // Boyutlandırma sırasında taşıma özelliğini devre dışı bırak
             bounds="parent"
+            defaultPosition={position}
         >
             <ResizableBox
                 width={dimensions.width}
@@ -42,7 +75,7 @@ const DesignComponent = React.forwardRef(({ deleteEvent, setSelectedElement, set
                 onResizeStart={() => setIsResizing(true)} // Boyutlandırma başlıyor
                 onResizeStop={() => setIsResizing(false)} // Boyutlandırma bitiyor
             >
-                <div className="draggableContent">
+                <div className="draggableContent" id={id + "-design"}>
                     <Icon fontSize="small" color="inherit"
                         className="drag-handle"
                         style={{
@@ -73,7 +106,7 @@ const DesignComponent = React.forwardRef(({ deleteEvent, setSelectedElement, set
                         }}>
                         delete
                     </Icon>
-                    {<Editor onClick={handleElementClick} id={id} ref={contentRef} />}
+                    <Editor onClick={handleElementClick} id={id} ref={contentRef} data={content} />
                 </div>
             </ResizableBox>
         </Draggable>

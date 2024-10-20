@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import EditorJS from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import Paragraph from '@editorjs/paragraph';
@@ -10,26 +10,18 @@ import Table from '@editorjs/table'
 import SimpleImage from '@editorjs/simple-image';
 import "./Editor.css";
 
-const Editor = React.forwardRef(({ onClick, id }, props) => {
+const Editor = React.forwardRef(({ onClick, id, data }, ref, props) => {
 
     const editorInstance = useRef(null);
-
-
-    const editorContentToHtml = (blocks) => {
-        return blocks.map(block => {
-            switch (block.type) {
-                case 'header':
-                    return `<Text title>${block.data.text}</Text>`;
-                case 'paragraph':
-                    return `<Text>${block.data.text}</Text>`;
-                case 'image':
-                    return `<Image src={"${block.data.file.url}"} alt="${block.data.caption}" />`;
-                // Diğer blok türleri eklenebilir
-                default:
-                    return '';
-            }
-        }).join('');
-    };
+    const [content, setContent] = useState(null);
+    React.useImperativeHandle(ref, () => ({
+        getContent: () => {
+            return content;
+        },
+        setContent: (data) => {
+            setContent(data);
+        }
+    }));
 
     useEffect(() => {
         // İlk olarak, 'editorjs' id'sine sahip elementin DOM'da var olup olmadığını kontrol et
@@ -103,10 +95,10 @@ const Editor = React.forwardRef(({ onClick, id }, props) => {
                     },
 
                 },
+                data: data,
                 onChange: async () => {
                     const content = await editorInstance.current.save();
-                    const htmlContent = editorContentToHtml(content.blocks); // HTML'e dönüştür
-                    console.log("HTML Content:" + htmlContent);
+                    setContent(content);
                 },
                 onReady: () => {
                     const totalBlocks = editorInstance.current.blocks.getBlocksCount();
@@ -118,11 +110,11 @@ const Editor = React.forwardRef(({ onClick, id }, props) => {
                     }
                 }
             });
+
         } else {
             console.error("Element with ID 'editorjs' is missing.");
         }
 
-        // Cleanup - bileşen unmount olduğunda editörü yok et
         return () => {
             if (editorInstance.current) {
                 editorInstance.current.destroy(); // Editör örneğini yok et

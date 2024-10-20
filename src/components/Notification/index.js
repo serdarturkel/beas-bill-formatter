@@ -42,6 +42,7 @@ const Notification = React.forwardRef((props, ref) => {
         title: "Title",
         content: "Content",
         dateTime: "1 sec ago",
+        reason: "Page Execution"
     });
     const setOptions = async (opts) => {
         return new Promise((resolve) => {
@@ -59,6 +60,7 @@ const Notification = React.forwardRef((props, ref) => {
             title={snackOptions.title}
             content={snackOptions.content}
             dateTime={snackOptions.dateTime}
+            reason={snackOptions.reason}
             open={infoSB}
             onClose={closeInfoSB}
             close={closeInfoSB}
