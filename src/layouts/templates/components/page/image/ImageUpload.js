@@ -70,8 +70,8 @@ const ImageUpload = React.forwardRef(({ id, content, deleteEvent, selectEvent, o
         if (contentRef.current) {
             const { scrollHeight, scrollWidth } = contentRef.current;
             setDimensions({
-                width: Math.max(scrollWidth + 20, 200), // Min width 200
-                height: Math.max(scrollHeight + 20, 200), // Min height 200
+                width: Math.max(scrollWidth + 20, 200),
+                height: Math.max(scrollHeight + 20, 200),
             });
             ref.current = {
                 getContent() {
@@ -83,12 +83,11 @@ const ImageUpload = React.forwardRef(({ id, content, deleteEvent, selectEvent, o
             };
         }
         if (content) {
-            console.log("Content For Image:" + content);
             setImageData(content.image);
-            if (initialDimension) {
-                imageDimension.width = initialDimension.width;
-                imageDimension.height = initialDimension.height;
-            }
+        }
+        if (initialDimension) {
+            imageDimension.width = initialDimension.width;
+            imageDimension.height = initialDimension.height;
         }
 
     }, [imageData]);

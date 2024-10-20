@@ -7,14 +7,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import DesignComponent from '../design/DesignElement';
 import { useReactToPrint } from 'react-to-print';
 import ImageUpload from '../image/ImageUpload';
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { getData, postData, patchData } from "api/api";
 import Notification from "components/Notification";
 import MDSnackbarOptions from "components/MDSnackbar/options";
 
 const A4Page = React.forwardRef(({ selectEvent }) => {
     const [selectedOrigin, originEvent] = useState();
-    //const [selectedElement, selectEvent] = useState(null);
+    const navigate = useNavigate();
 
     const [components, setComponents] = useState([]);
     const componentRefs = useRef([]);
@@ -82,7 +82,9 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
             });
         }
     }
-
+    const backToThePage = async (item) => {
+        navigate('/invoiceTemplates');
+      };
     const print = (event) => {
         const printElement = pageContentRef.current;
         if (printElement) {
@@ -229,7 +231,7 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
                     </Icon>
                     Print
                 </Button>
-                <Button className='primary' onClick={savePage}>
+                <Button className='primary' onClick={backToThePage}>
                     <Icon fontSize="small" color="inherit">
                         arrow_back
                     </Icon>

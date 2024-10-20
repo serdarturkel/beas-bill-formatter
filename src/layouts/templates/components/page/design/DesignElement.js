@@ -56,14 +56,16 @@ const DesignComponent = React.forwardRef(({ id, deleteEvent, selectEvent, origin
                 height: Math.max(scrollHeight + 20, 200), // Min height 200
             });
         }
-    }, [contentRef, ref]);
-
-    useEffect(() => {
         if (content) {
             console.log("Default Content:" + JSON.stringify(content));
             contentRef.current.setContent(content);
         }
-    }, [content]);
+        if (initialDimension) {
+            dimensions.width = initialDimension.width;
+            dimensions.height = initialDimension.height;
+        }
+    }, [content,contentRef, ref]);
+
 
     return (
         <Draggable ref={draggableRef}
@@ -74,8 +76,6 @@ const DesignComponent = React.forwardRef(({ id, deleteEvent, selectEvent, origin
         >
             <ResizableBox
                 ref={resizableRef}
-                width={dimensions.width}
-                height={dimensions.height}
                 resizeHandles={["se", "e", "s"]}
                 minConstraints={[10, 10]}
                 maxConstraints={[1920, 1080]}
