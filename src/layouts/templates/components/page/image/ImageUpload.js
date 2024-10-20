@@ -4,10 +4,11 @@ import styled from 'styled-components';
 import Draggable from 'react-draggable';
 import { ResizableBox } from 'react-resizable';
 import '../style/General.css';
-const ImageUpload = React.forwardRef(({ id, content, deleteEvent, selectEvent, originEvent, position }, ref) => {
+const ImageUpload = React.forwardRef(({ id, content, deleteEvent, selectEvent, originEvent, position, initialDimension }, ref) => {
     const type = "image";
     const [imageData, setImageData] = useState(null);
-    const rndRef = useRef(null);
+    const draggableRef = useRef();
+    const resizableRef = useRef();
     const contentRef = useRef(null);
     const [imageDimension, setDimensions] = useState({ width: 150, height: 60 });
     const [isResizing, setIsResizing] = useState(false); // Resizable durumu kontrolü
@@ -25,9 +26,13 @@ const ImageUpload = React.forwardRef(({ id, content, deleteEvent, selectEvent, o
         getType: () => {
             return type;
         },
-        getBoundingClientRect: () => {
-            const { x, y } = rndRef.current.state;
+        getPosition: () => {
+            const { x, y } = draggableRef.current.state;
             return { x, y };
+        },
+        getDimension: () => {
+            const { width, height } = resizableRef.current.state;
+            return { width, height };
         }
     }));
 
@@ -77,24 +82,32 @@ const ImageUpload = React.forwardRef(({ id, content, deleteEvent, selectEvent, o
                 }
             };
         }
-        if (content)
-            setImageData(content);
+        if (content) {
+            console.log("Content For Image:" + content);
+            setImageData(content.image);
+            if (initialDimension) {
+                imageDimension.width = initialDimension.width;
+                imageDimension.height = initialDimension.height;
+            }
+        }
+
     }, [imageData]);
     return (
-        <Draggable ref={rndRef}
+        <Draggable ref={draggableRef}
             handle=".drag-handle"
             disabled={isResizing}
             bounds="parent"
             defaultPosition={position}
         >
             <ResizableBox
+                ref={resizableRef}
                 width={imageDimension.width}
                 height={imageDimension.height}
                 resizeHandles={["se", "e", "s"]}
-                minConstraints={[10, 10]} // Min boyutlar
-                maxConstraints={[1920, 1080]} // Max boyutlar
-                onResizeStart={() => setIsResizing(true)} // Boyutlandırma başlıyor
-                onResizeStop={() => setIsResizing(false)} // Boyutlandırma bitiyor
+                minConstraints={[10, 10]}
+                maxConstraints={[1920, 1080]}
+                onResizeStart={() => setIsResizing(true)}
+                onResizeStop={() => setIsResizing(false)}
             >
                 <div className='draggableContent' id={id + "-image"}>
                     <Icon fontSize="small"

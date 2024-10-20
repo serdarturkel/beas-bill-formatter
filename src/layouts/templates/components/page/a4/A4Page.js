@@ -11,8 +11,6 @@ import { Navigate, useParams } from "react-router-dom";
 import { getData, postData, patchData } from "api/api";
 import Notification from "components/Notification";
 import MDSnackbarOptions from "components/MDSnackbar/options";
-import CreateProjectBody from "layouts/projects/ui/components/CreateProjectDialogBody";
-import { position } from "stylis";
 
 const A4Page = React.forwardRef(({ selectEvent }) => {
     const [selectedOrigin, originEvent] = useState();
@@ -58,7 +56,7 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
 
 
 
-    const addComponent = (id, type, content,position) => {
+    const addComponent = (id, type, content, position, dimension) => {
         const dynamicRef = React.createRef();
         const newComp = {
             type: type,
@@ -66,7 +64,8 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
             zIndex: components.length,
             content: content,
             dynamicRef: dynamicRef,
-            position: position
+            position: position,
+            dimension: dimension
         };
 
         setComponents(prevComponents => [...prevComponents, newComp]);
@@ -79,7 +78,7 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
             const designDataList = JSON.parse(data.designData);
             designDataList.forEach((designData) => {
                 const storedElement = JSON.parse(designData);
-                addComponent(storedElement.id, storedElement.type, storedElement.content,storedElement.position);
+                addComponent(storedElement.id, storedElement.type, storedElement.content, storedElement.position, storedElement.dimension);
             });
         }
     }
@@ -112,10 +111,10 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
         setComponents(updatedItems);
     }
     const addDesignComponent = () => {
-        addComponent(`beas-comp-${Math.floor(Math.random() * 10000)}`, 'design', null,{x:0,y:0});
+        addComponent(`beas-comp-${Math.floor(Math.random() * 10000)}`, 'design', null, { x: 0, y: 0 }, { width: 150, height: 60 });
     };
     const addImageComponent = () => {
-        addComponent(`beas-comp-${Math.floor(Math.random() * 10000)}`, 'image', null,{x:0,y:0});
+        addComponent(`beas-comp-${Math.floor(Math.random() * 10000)}`, 'image', null, { x: 0, y: 0 }, { width: 150, height: 60 });
     };
     const savePage = () => {
         let contents = [];
@@ -123,7 +122,8 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
             if (compRef && compRef.current) {
                 const designDataObject = {
                     content: compRef.current.getContent(),
-                    position: compRef.current.getBoundingClientRect(),
+                    position: compRef.current.getPosition(),
+                    dimension: compRef.current.getDimension(),
                     type: compRef.current.getType(),
                     id: compRef.current.getId()
                 };
@@ -256,6 +256,7 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
                                             originEvent={originEvent}
                                             content={comp.content}
                                             position={comp.position}
+                                            initialDimension={comp.dimension}
                                         />
                                     );
                                 }
@@ -271,6 +272,7 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
                                             originEvent={originEvent}
                                             content={comp.content}
                                             position={comp.position}
+                                            initialDimension={comp.dimension}
                                         />
                                     );
                                 }
