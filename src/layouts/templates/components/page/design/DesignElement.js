@@ -5,7 +5,7 @@ import Draggable from "react-draggable";
 import { ResizableBox } from "react-resizable";
 import '../style/General.css';
 
-const DesignComponent = React.forwardRef(({ id, deleteEvent, selectEvent, originEvent, content, position,initialDimension }, ref) => {
+const DesignComponent = React.forwardRef(({ id, deleteEvent, selectEvent, originEvent, content, position, initialDimension }, ref) => {
     const draggableRef = useRef();
     const resizableRef = useRef();
 
@@ -47,25 +47,30 @@ const DesignComponent = React.forwardRef(({ id, deleteEvent, selectEvent, origin
     };
 
 
-
+    /*
     useEffect(() => {
         if (contentRef.current) {
             const { scrollHeight, scrollWidth } = contentRef.current;
             setDimensions({
-                width: Math.max(scrollWidth + 20, 200), // Min width 200
-                height: Math.max(scrollHeight + 20, 200), // Min height 200
+                width: Math.max(scrollWidth + 20, dimensions.width),
+                height: Math.max(scrollHeight + 20, dimensions.height),
             });
         }
+    }, [contentRef, ref]);
+    */
+
+    useEffect(() => {
         if (content) {
             console.log("Default Content:" + JSON.stringify(content));
             contentRef.current.setContent(content);
         }
         if (initialDimension) {
-            dimensions.width = initialDimension.width;
-            dimensions.height = initialDimension.height;
+            setDimensions({
+                width: initialDimension.width,
+                height: initialDimension.height
+            });
         }
-    }, [content,contentRef, ref]);
-
+    }, [contentRef, ref]);
 
     return (
         <Draggable ref={draggableRef}
@@ -76,6 +81,8 @@ const DesignComponent = React.forwardRef(({ id, deleteEvent, selectEvent, origin
         >
             <ResizableBox
                 ref={resizableRef}
+                width={dimensions.width}
+                height={dimensions.height}
                 resizeHandles={["se", "e", "s"]}
                 minConstraints={[10, 10]}
                 maxConstraints={[1920, 1080]}
@@ -113,7 +120,7 @@ const DesignComponent = React.forwardRef(({ id, deleteEvent, selectEvent, origin
                         }}>
                         delete
                     </Icon>
-                    <Editor onClick={handleElementClick} id={id} ref={contentRef} data={content} />
+                    {<Editor onClick={handleElementClick} id={id} ref={contentRef} data={content} />}
                 </div>
             </ResizableBox>
         </Draggable>
