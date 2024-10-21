@@ -30,6 +30,132 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
 
     const [templateName, setTemplateName] = useState('');
 
+    /**
+     start
+     **/
+
+    // Elementin class'larına göre stilleri al
+    const getCssFromClasses = (element) => {
+        const sheets = document.styleSheets; // Tüm CSS dosyaları (styleSheets) buradan alınıyor
+        let cssRules = {};
+
+        // Her bir styleSheet'i kontrol et
+        for (let i = 0; i < sheets.length; i++) {
+            const sheet = sheets[i];
+
+            try {
+                // Stil dosyasındaki tüm kuralları gez
+                const rules = sheet.rules || sheet.cssRules;
+                for (let j = 0; j < rules.length; j++) {
+                    const rule = rules[j];
+
+                    if (rule.selectorText) {
+                        const selectors = rule.selectorText.split(",");
+                        selectors.forEach((selector) => {
+                            // Eğer bir class veya ID içeren kural bulursak
+                            if (selector.startsWith(".") || selector.startsWith("#")) {
+                                if (!cssRules[selector]) {
+                                    cssRules[selector] = "";
+                                }
+                                // CSS kuralını o class veya ID'ye ekle
+                                cssRules[selector] += `${rule.style.cssText}\n`;
+                            }
+                        });
+                    }
+                }
+            } catch (e) {
+                console.warn("Cross-origin stylesheet ignored:", sheet.href);
+            }
+        }
+
+        return cssRules;
+    };
+    const modifyNode = (tempDiv, nodeName, action) => {
+        const items = tempDiv.querySelectorAll(nodeName);
+        items.forEach((item) => {
+            if (action === 'remove') {
+                item.remove();
+            }
+            else if (action === 'remove-border') {
+                item.style.border = 'none';
+                item.style.boxSizing = 'none';
+            } else if (action === 'hide') {
+                item.style.display = 'none';
+            }
+            else if (action === 'add-border') {
+                item.style.border = 'solid 1px #e8e8eb';
+            } else {
+                console.log("Other action");
+            }
+        });
+    };
+
+    const removeUnnecessaryComponents = () => {
+        const printElement = pageContentRef.current;
+        const tempDiv = document.createElement("div");
+
+        if (printElement) {
+            // Geçici bir DOM elementine çevir
+            tempDiv.innerHTML = printElement.innerHTML;
+
+            const removeClassList = ['.codex-editor-overlay', '.ce-inline-toolbar', '.ce-toolbar', '.drag-handle', '.react-resizable-handle', '.tc-add-column', '.tc-add-row', '.tc-toolbox'];
+            removeClassList.forEach((cls) => modifyNode(tempDiv, cls, 'remove'));
+
+            const modifyBorderClassList = ['.draggableContent', '.pageContent'];
+            modifyBorderClassList.forEach((cls) => modifyNode(tempDiv, cls, 'remove-border'));
+
+            const addBorderStyleClassList = ['.tc-table'];
+            addBorderStyleClassList.forEach((cls) => modifyNode(tempDiv, cls, 'add-border'));
+
+        }
+        return tempDiv;
+    };
+
+    // HTML ve Class tabanlı CSS'i al
+    const getHtmlWithCss = () => {
+        const element = removeUnnecessaryComponents();
+        const htmlContent = element.innerHTML;
+        const cssClasses = new Set();
+
+        // Elementin tüm class'larını topla
+        const collectClasses = (el) => {
+            if (el.classList) {
+                el.classList.forEach((cls) => cssClasses.add(`.${cls}`));
+            }
+            Array.from(el.children).forEach((child) => collectClasses(child));
+        };
+        collectClasses(element);
+
+        // Class'lara ait stil tanımlamalarını al
+        const allCssRules = getCssFromClasses(element);
+        let styleContent = "";
+        cssClasses.forEach((cls) => {
+            if (allCssRules[cls]) {
+                styleContent += `${cls} { ${allCssRules[cls]} }\n`;
+            }
+        });
+
+        // HTML ve CSS stil birleştirme
+        
+        const fullHtmlWithCss = `<html><head><title>${id}</title><style>.page {width: 210mm;height: 297mm;background: white;display: inline-block;vertical-align: top;} ${styleContent}</style></head><body style="border:none;margin:0px;padding:0px;"><div class="page">${htmlContent}</div></body></html>`;
+
+        return fullHtmlWithCss;
+    };
+
+    const handleExport = () => {
+        const htmlWithCss = getHtmlWithCss();
+
+        // Veriyi bir dosyaya yazmak için HTML formatında indirme işlemi
+        const blob = new Blob([htmlWithCss], { type: "text/html" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "exportedComponent.html";
+        link.click();
+    };
+    /**
+     end
+     **/
+
     const changeZIndex = (clickedId) => {
         setComponents(prevComponents => prevComponents.map(comp => ({ ...comp, zIndex: comp.id === clickedId ? 1 : 0 })));
     };
@@ -140,10 +266,12 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
             }
         });
 
+        const htmlData = getHtmlWithCss();
+
         if (data) {
             patchData("/invoiceTemplate/update", {
                 "id": id,
-                "html": pageContentRef.current.parentElement.outerHTML,
+                "html": htmlData,
                 "designData": JSON.stringify(contents),
                 "templateName": templateName,
                 "status": status ? 'ACTIVE' : 'DRAFT',
@@ -160,7 +288,7 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
         } else {
             postData("/invoiceTemplate/create", {
                 "id": id,
-                "html": pageContentRef.current.parentElement.outerHTML,
+                "html": htmlData,
                 "templateName": templateName,
                 "designData": JSON.stringify(contents),
                 "status": status === true ? 'ACTIVE' : 'DRAFT',
@@ -193,7 +321,7 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
                 </Skeleton>
             );
         }
-        return (<span></span>)
+        return ('')
     }
     return (
         <div>
@@ -214,6 +342,12 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
                         setTemplateName(event.target.value);
                     }}
                 />
+                <Button className='primary' onClick={handleExport}>
+                    <Icon fontSize="small" color="inherit">
+                        download
+                    </Icon>
+                    Export
+                </Button>
                 <Button className='primary' onClick={savePage}>
                     <Icon fontSize="small" color="inherit">
                         save

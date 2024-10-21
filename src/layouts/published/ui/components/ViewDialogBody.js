@@ -1,4 +1,4 @@
-import { Autocomplete, Grid, Switch, TextField } from "@mui/material";
+import { Autocomplete, Button, Grid, Icon, Switch, TextField } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { getData } from 'api/api';
 import { Label } from "@mui/icons-material";
@@ -45,6 +45,15 @@ const ViewBody = (item) => {
             setStatus(false);
         }
     }, [item?.status]);
+
+    const handleExport = (htmlWithCss) => {
+        const blob = new Blob([htmlWithCss], { type: "text/html" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "item.html";
+        link.click();
+    };
+
     return (
         <div>
             <Notification ref={notificationElement} />
@@ -71,7 +80,12 @@ const ViewBody = (item) => {
                     <span>Html :</span>
                 </Grid>
                 <Grid item xs={9} style={{ textAlign: "left" }}>
-                    <span>download</span>
+                    <Button className='primary' onClick={()=>handleExport(item?.html)}>
+                        <Icon fontSize="small" color="inherit">
+                            download
+                        </Icon>
+                        Export
+                    </Button>
                 </Grid>
                 <Grid item xs={3} style={{ textAlign: "right" }} >
                     <span>Version :</span>
