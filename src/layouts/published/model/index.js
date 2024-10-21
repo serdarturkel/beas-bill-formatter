@@ -29,13 +29,8 @@ const PublishedInvoiceTemplateModel = {
             sortable: true,
         },
         {
-            name: 'Certificate Id',
-            selector: row => row.certificateId,
-            sortable: true,
-        },
-        {
-            name: 'File Name',
-            selector: row => row.fileName,
+            name: 'Uploaded',
+            selector: row => <Icon fontSize="medium" color="dark">{row.uploaded?'attach_file':'none'}</Icon>,
             sortable: true,
         },
         {
