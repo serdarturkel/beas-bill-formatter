@@ -8,8 +8,11 @@ export const setGlobalErrorHandler = (handler) => {
     errorHandler = handler;
 };
 
+export const BASE_PATH =  'http://localhost:8090/formatter/v1';
+
+
 const api = axios.create({
-    baseURL: 'http://localhost:8090/formatter/v1',
+    baseURL: BASE_PATH,
     headers: {
         'Content-Type': 'application/json',
     },
@@ -39,10 +42,10 @@ api.interceptors.response.use(
                 errorHandler(error.response ? error.response : message);
             }
             return Promise.reject(error.response);
-        }  else if (error.request) {
+        } else if (error.request) {
 
             message = 'No response received from server. Please check your network connection.';
-        }  else {
+        } else {
             message = 'Request setup error: ' + error.message;
         }
 
@@ -100,6 +103,16 @@ export const deleteData = async (endpoint) => {
         return response.data;
     } catch (error) {
         console.error('DELETE error: %s', error);
+        throw error;
+    }
+};
+
+export const fileUpload = async (endpoint, formData, headers) => {
+    try {
+        const response = await api.post(endpoint, formData, headers);
+        return response.data;
+    } catch (error) {
+        console.error('POST error: %s', error);
         throw error;
     }
 };

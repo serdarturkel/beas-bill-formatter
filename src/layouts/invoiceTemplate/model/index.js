@@ -1,5 +1,4 @@
 import { Icon, Switch } from "@mui/material";
-import { patchData } from "api/api";
 import { format } from "date-fns";
 
 
@@ -22,17 +21,12 @@ const InvoiceTemplateModel = {
         },
         {
             name: 'Uploaded',
-            selector: row => row.uploaded,
+            selector: row => <Icon fontSize="medium" color="dark">{row.uploaded?'attach_file':'none'}</Icon>,
             sortable: true,
         },
         {
             name: 'Status',
             selector: row => <Icon fontSize="medium" color={row.status=='ACTIVE'?'success':'primary'}>circle</Icon>,
-            sortable: true,
-        },
-        {
-            name: 'File Name',
-            selector: row => row.fileName,
             sortable: true,
         },
         {
@@ -59,19 +53,19 @@ const InvoiceTemplateModel = {
     createDialogOpts: {
         submitButtonText: "Create",
         cancelButtonText: "Cancel",
-        title: "Publish Certificate",
+        title: "Invoice Template",
         content: "Please enter the information you want",
     },
     editDialogOpts: {
         submitButtonText: "Edit",
         cancelButtonText: "Cancel",
-        title: "Edit Published Certificate",
+        title: "Edit Invoice Template",
         content: "Please enter the information you want",
     },
     viewDialogOpts: {
         submitButtonText: "OK",
         cancelButtonText: "Cancel",
-        title: "View Published Certificate",
+        title: "View Invoice Template",
         content: "Certificate details in below",
     },
     WARNING: {

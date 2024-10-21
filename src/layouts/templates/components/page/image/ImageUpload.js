@@ -47,7 +47,7 @@ const ImageUpload = React.forwardRef(({ id, content, deleteEvent, selectEvent, o
             reader.onloadend = () => {
                 setImageData(reader.result);
             };
-            reader.readAsDataURL(file); // Binary olarak veriyi okuyoruz
+            reader.readAsDataURL(file);
         }
     };
     const handleElementClick = (e) => {
@@ -156,7 +156,6 @@ const ImageUpload = React.forwardRef(({ id, content, deleteEvent, selectEvent, o
                             <VisuallyHiddenInput
                                 type="file"
                                 onChange={handleFileChange}
-                                multiple
                             />
                         </Button>
                     )}

@@ -2,7 +2,7 @@
 import "./A4Page.css";
 import "react-resizable/css/styles.css";
 
-import { Icon, Button, Skeleton, Avatar, TextField, Switch } from '@mui/material';
+import { Icon, Button, Skeleton, Avatar, TextField, Switch, Box, CircularProgress, Stack, LinearProgress } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import DesignComponent from '../design/DesignElement';
 import { useReactToPrint } from 'react-to-print';
@@ -11,6 +11,8 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { getData, postData, patchData } from "api/api";
 import Notification from "components/Notification";
 import MDSnackbarOptions from "components/MDSnackbar/options";
+import { useLocation } from "react-router-dom";
+
 
 const A4Page = React.forwardRef(({ selectEvent }) => {
     const [selectedOrigin, originEvent] = useState();
@@ -29,6 +31,9 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
     const notificationElement = useRef();
 
     const [templateName, setTemplateName] = useState('');
+
+    const query = new URLSearchParams(useLocation().search);
+    const action = query.get("action");
 
     /**
      start
@@ -136,7 +141,7 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
         });
 
         // HTML ve CSS stil birleştirme
-        
+
         const fullHtmlWithCss = `<html><head><title>${id}</title><style>.page {width: 210mm;height: 297mm;background: white;display: inline-block;vertical-align: top;} ${styleContent}</style></head><body style="border:none;margin:0px;padding:0px;"><div class="page">${htmlContent}</div></body></html>`;
 
         return fullHtmlWithCss;
@@ -184,7 +189,10 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
     };
 
     useEffect(() => {
-        fetchData();
+        if (action === "view")
+            fetchData();
+        else
+            setLoading(false);
     }, [id]);
 
 
@@ -316,9 +324,12 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
     const skelton = () => {
         if (loading) {
             return (
-                <Skeleton variant="circular">
-                    <Avatar />
-                </Skeleton>
+                <Stack spacing={2} direction="row" alignItems="center" style={{ margin: "5% 25% none 25%", textAlign: "center", verticalAlign: "middle" }} >
+                    <Box sx={{ width: '100%',overflow:"hidden" }}>
+                        <LinearProgress /><br/>
+                        <span>Loading...</span>
+                    </Box>
+                </Stack>
             );
         }
         return ('')

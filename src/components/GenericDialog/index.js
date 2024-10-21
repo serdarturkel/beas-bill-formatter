@@ -50,6 +50,7 @@ const GenericDialog = React.forwardRef((props, ref) => {
           onSubmit: (event) => {
             event.preventDefault();
             if (submitAction) {
+              console.log("Form Data Info:"+event.currentTarget);
               const formData = new FormData(event.currentTarget);
               const formJson = Object.fromEntries(formData.entries());
               submitAction(formJson);
