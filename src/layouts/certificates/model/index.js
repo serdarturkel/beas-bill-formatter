@@ -18,16 +18,6 @@ const CertificateModel = {
             sortable: true,
         },
         {
-            name: 'Validity Days',
-            selector: row => row.validityDays,
-            sortable: true,
-        },
-        {
-            name: 'Certificate Store Id',
-            selector: row => row.certificateStoreId,
-            sortable: true,
-        },
-        {
             name: 'Created By',
             selector: row => row.createdBy,
             sortable: true,
