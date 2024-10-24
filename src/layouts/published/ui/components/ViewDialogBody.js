@@ -60,30 +60,29 @@ const ViewBody = (item) => {
 
     const downloadPem = () => {
         if (item?.id) {
-            window.open(BASE_PATH + '/pdfSigner/download/pem/' + encodeURIComponent(item?.certificateId), "_self");
+            window.open(BASE_PATH + '/pdfSigner/download/pem/' + encodeURIComponent(item?.certificateId), "_blank");
         }
     };
 
     const downloadCert = () => {
         if (item?.id) {
-            window.open(BASE_PATH + '/pdfSigner/download/cert/' + encodeURIComponent(item?.certificateId), "_self");
+            window.open(BASE_PATH + '/pdfSigner/download/cert/' + encodeURIComponent(item?.certificateId), "_blank");
         }
     };
     const handleView = () => {
         if (item?.uploaded) {
-            downloadFiles();
-        }
-        else
-            handleExport();
-    };
+            const file1Url = BASE_PATH + '/invoiceTemplate/download?fileName=' + encodeURIComponent(item?.xmlFileName);
+            const file2Url = BASE_PATH + '/invoiceTemplate/download?fileName=' + encodeURIComponent(item?.xslFileName);
 
-    const downloadFiles = () => {
-        const file1Url = BASE_PATH + '/invoiceTemplate/download?fileName=' + encodeURIComponent(item?.xmlFileName);
-        const file2Url = BASE_PATH + '/invoiceTemplate/download?fileName=' + encodeURIComponent(item?.xslFileName);
-    
-        window.open(file1Url, "_blank");
-        window.open(file2Url, "_blank");
-      };
+            window.open(file1Url, "_blank");
+            window.open(file2Url, "_blank");
+        }
+        else {
+            const file1Url = BASE_PATH + '/invoiceTemplate/download?fileName=' + encodeURIComponent(item?.htmlFileName);
+            window.open(file1Url, "_blank");
+        }
+
+    };
 
     return (
         <div>

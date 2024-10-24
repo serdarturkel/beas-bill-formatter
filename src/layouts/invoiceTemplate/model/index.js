@@ -15,6 +15,11 @@ const InvoiceTemplateModel = {
             sortable: true,
         },
         {
+            name: 'Version',
+            selector: row => row.version,
+            sortable: true,
+        },
+        {
             name: 'XML File Version',
             selector: row => row.xmlFileVersion,
             sortable: true,
