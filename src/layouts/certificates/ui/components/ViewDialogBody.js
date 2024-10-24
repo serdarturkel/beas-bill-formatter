@@ -8,13 +8,13 @@ import MDButton from "components/MDButton";
 const ViewBody = (item) => {
     const downloadPem = () => {
         if (item?.id) {
-            window.open(BASE_PATH + '/pdfSigner/download/pem/' + item?.id, "_self");
+            window.open(BASE_PATH + '/pdfSigner/download/pem/' +encodeURIComponent(item?.id), "_blank");
         }
     };
 
     const downloadCert = () => {
         if (item?.id) {
-            window.open(BASE_PATH + '/pdfSigner/download/cert/' + item?.id, "_self");
+            window.open(BASE_PATH + '/pdfSigner/download/cert/' + encodeURIComponent(item?.id), "_blank");
         }
     };
     return (

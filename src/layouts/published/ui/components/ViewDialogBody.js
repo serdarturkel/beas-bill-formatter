@@ -60,24 +60,31 @@ const ViewBody = (item) => {
 
     const downloadPem = () => {
         if (item?.id) {
-            window.open(BASE_PATH + '/pdfSigner/download/pem/' + item?.certificateId, "_self");
+            window.open(BASE_PATH + '/pdfSigner/download/pem/' + encodeURIComponent(item?.certificateId), "_self");
         }
     };
 
     const downloadCert = () => {
         if (item?.id) {
-            window.open(BASE_PATH + '/pdfSigner/download/cert/' + item?.certificateId, "_self");
+            window.open(BASE_PATH + '/pdfSigner/download/cert/' + encodeURIComponent(item?.certificateId), "_self");
         }
     };
     const handleView = () => {
-        console.log("Click:" + JSON.stringify(item));
         if (item?.uploaded) {
-            console.log("FILE_NAME:" + item?.fileName);
-            window.open(BASE_PATH + '/invoiceTemplate/download?fileName=' + item?.fileName, "_self");
+            downloadFiles();
         }
         else
             handleExport();
     };
+
+    const downloadFiles = () => {
+        const file1Url = BASE_PATH + '/invoiceTemplate/download?fileName=' + encodeURIComponent(item?.xmlFileName);
+        const file2Url = BASE_PATH + '/invoiceTemplate/download?fileName=' + encodeURIComponent(item?.xslFileName);
+    
+        window.open(file1Url, "_blank");
+        window.open(file2Url, "_blank");
+      };
+
     return (
         <div>
             <Notification ref={notificationElement} />
@@ -101,10 +108,16 @@ const ViewBody = (item) => {
                     <span>{item?.templateName}</span>
                 </Grid>
                 <Grid item xs={3} style={{ textAlign: "right" }} >
-                    <span>Version :</span>
+                    <span>XML File Version :</span>
                 </Grid>
                 <Grid item xs={9} style={{ textAlign: "left" }}>
-                    <span>{item?.version}</span>
+                    <span>{item?.xmlFileVersion}</span>
+                </Grid>
+                <Grid item xs={3} style={{ textAlign: "right" }} >
+                    <span>XSL File Version :</span>
+                </Grid>
+                <Grid item xs={9} style={{ textAlign: "left" }}>
+                    <span>{item?.xslFileVersion}</span>
                 </Grid>
                 <Grid item xs={3} style={{ textAlign: "right" }} >
                     <span>Status :</span>

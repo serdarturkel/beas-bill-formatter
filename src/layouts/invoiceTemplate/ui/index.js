@@ -24,13 +24,22 @@ import ConfirmModal from "components/Confirm";
 import { BASE_PATH } from "api/api";
 
 function InvoiceTemplatePage() {
-  const [selectedFile, setSelectedFile] = useState(null);
   const notificationElement = useRef();
   const confirmModal = useRef();
 
   const confirm = useConfirm();
   const navigate = useNavigate();
 
+  const [xmlFile, setXmlFile] = useState(null);
+  const [xslFile, setXslFile] = useState(null);
+
+  const handleXmlFileChange = (event) => {
+    setXmlFile(event.target.files[0]);
+  };
+
+  const handleXslFileChange = (event) => {
+    setXslFile(event.target.files[0]);
+  };
 
   const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -70,10 +79,18 @@ function InvoiceTemplatePage() {
         });
     });
   };
+  const downloadFiles = (item) => {
+    const file1Url = BASE_PATH + '/invoiceTemplate/download?fileName=' + encodeURIComponent(item?.xmlFileName);
+    const file2Url = BASE_PATH + '/invoiceTemplate/download?fileName=' + encodeURIComponent(item?.xslFileName);
+
+
+    window.open(file1Url, "_blank");
+    window.open(file2Url, "_blank");
+  };
 
   const handleView = async (item) => {
     if (item?.uploaded) {
-      window.open(BASE_PATH + '/invoiceTemplate/download?fileName=' + item?.fileName, "_self");
+      downloadFiles(item);
     }
     else
       navigate('/invoiceTemplate/' + item?.id + "?action=view");
@@ -83,21 +100,17 @@ function InvoiceTemplatePage() {
     navigate('/invoiceTemplate/' + uuidv4() + "?action=new");
   };
 
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
-  };
-
 
   const confirmTemplateName = () => {
     confirmModal.current.show();
   }
 
-  const uploadAction = (inputValue) => {
-    console.log("Input Value:" + inputValue);
+  const uploadAction = (templateName) => {
     const formData = new FormData();
-    formData.append("file", selectedFile);
+    formData.append("xmlFile", xmlFile);
+    formData.append("xslFile", xslFile);
 
-    fileUpload("/invoiceTemplate/upload?templateName=" + inputValue, formData, {
+    fileUpload("/invoiceTemplate/upload?templateName=" + templateName, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       }
@@ -111,8 +124,9 @@ function InvoiceTemplatePage() {
       console.error(e);
     });
   }
-  const showUpload = () => {
-    if (selectedFile) {
+
+  const showUploadButton = () => {
+    if (xmlFile && xslFile) {
       return (<Button
         component="label"
         role={undefined}
@@ -129,8 +143,9 @@ function InvoiceTemplatePage() {
       </Button>);
     }
   }
-  const showClearUpload = () => {
-    if (selectedFile) {
+
+  const showClearUploadButton = () => {
+    if (xmlFile && xslFile) {
       return (<Button
         component="label"
         role={undefined}
@@ -140,35 +155,43 @@ function InvoiceTemplatePage() {
         width="48px"
         height="48px"
         style={{ marginRight: "10px" }}
-        onClick={() => setSelectedFile(null)}>
-
+        onClick={(e) => {
+          setXmlFile(null);
+          setXslFile(null);
+        }}>
         <Icon sx={{ fontWeight: "bold" }}>{"close"}</Icon>
-        <span>Clear Selection</span>
+        <span>Clear Selections</span>
       </Button>);
     }
   }
-  const selectFileButton = () => (<Button
-    component="label"
-    role={undefined}
-    variant="contained"
-    tabIndex={-1}
-    color='white'
-    width="48px"
-    height="48px"
-    style={{ marginRight: "10px" }}
-  >
-    <Icon fontSize="small">
-      attach_file
-    </Icon>
-    <span>{selectedFile?.name}</span>
-    <VisuallyHiddenInput
-      type="file"
-      onChange={handleFileChange}
-      required
-      name="templateFile"
-      id="templateFile"
-    />
-  </Button>);
+  const selectFileButton = (name, id, file, accepts, handleMethod) => {
+
+    return (<Button
+      component="label"
+      role={undefined}
+      variant="contained"
+      tabIndex={-1}
+      color='white'
+      width="48px"
+      height="48px"
+      style={{ marginRight: "10px" }}
+    >
+      <Icon fontSize="small">
+        attach_file
+      </Icon>
+      <span>{file?.name ? file?.name : (name === 'xmlFile' ? 'XML' : 'XSL')}</span>
+      <VisuallyHiddenInput
+        type="file"
+        onChange={handleMethod}
+        required
+        name={name}
+        id={id}
+        accept={accepts}
+      />
+    </Button>);
+
+  };
+
   return (
     <MDBox>
       <Notification ref={notificationElement} />
@@ -180,9 +203,11 @@ function InvoiceTemplatePage() {
             <span>Create Template</span>
           </MDButton>
           <MDBox>
-            {selectFileButton()}
-            {showUpload()}
-            {showClearUpload()}
+            <span>Invoice Upload : </span>
+            {selectFileButton("xmlFile", "xmlFile", xmlFile, ".xml", handleXmlFileChange)}
+            {selectFileButton("xslFile", "xslFile", xslFile, ".xsl", handleXslFileChange)}
+            {showUploadButton()}
+            {showClearUploadButton()}
           </MDBox>
         </MDBox>
       </MDBox>

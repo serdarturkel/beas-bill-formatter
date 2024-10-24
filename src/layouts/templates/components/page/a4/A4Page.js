@@ -2,12 +2,12 @@
 import "./A4Page.css";
 import "react-resizable/css/styles.css";
 
-import { Icon, Button, Skeleton, Avatar, TextField, Switch, Box, CircularProgress, Stack, LinearProgress } from '@mui/material';
+import { Icon, Button, TextField, Switch, Box, Stack, LinearProgress } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import DesignComponent from '../design/DesignElement';
 import { useReactToPrint } from 'react-to-print';
 import ImageUpload from '../image/ImageUpload';
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getData, postData, patchData } from "api/api";
 import Notification from "components/Notification";
 import MDSnackbarOptions from "components/MDSnackbar/options";
@@ -214,9 +214,9 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
     };
 
     const recreateComponenet = (data) => {
-        if (data.designData) {
+        if (data.htmlDesignData) {
             setComponents([]);
-            const designDataList = JSON.parse(data.designData);
+            const designDataList = JSON.parse(data.htmlDesignData);
             designDataList.forEach((designData) => {
                 const storedElement = JSON.parse(designData);
                 addComponent(storedElement.id, storedElement.type, storedElement.content, storedElement.position, storedElement.dimension);
@@ -279,8 +279,8 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
         if (data) {
             patchData("/invoiceTemplate/update", {
                 "id": id,
-                "html": htmlData,
-                "designData": JSON.stringify(contents),
+                "htmlContent": htmlData,
+                "htmlDesignData": JSON.stringify(contents),
                 "templateName": templateName,
                 "status": status ? 'ACTIVE' : 'DRAFT',
             }).then((obj) => {
@@ -295,10 +295,9 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
 
         } else {
             postData("/invoiceTemplate/create", {
-                "id": id,
-                "html": htmlData,
+                "htmlContent": htmlData,
                 "templateName": templateName,
-                "designData": JSON.stringify(contents),
+                "htmlDesignData": JSON.stringify(contents),
                 "status": status === true ? 'ACTIVE' : 'DRAFT',
             }).then((obj) => {
                 setData(obj);
@@ -325,8 +324,8 @@ const A4Page = React.forwardRef(({ selectEvent }) => {
         if (loading) {
             return (
                 <Stack spacing={2} direction="row" alignItems="center" style={{ margin: "5% 25% none 25%", textAlign: "center", verticalAlign: "middle" }} >
-                    <Box sx={{ width: '100%',overflow:"hidden" }}>
-                        <LinearProgress /><br/>
+                    <Box sx={{ width: '100%', overflow: "hidden" }}>
+                        <LinearProgress /><br />
                         <span>Loading...</span>
                     </Box>
                 </Stack>
